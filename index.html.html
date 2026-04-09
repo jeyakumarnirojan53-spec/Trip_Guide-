@@ -183,6 +183,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .dest-section{padding:20px 14px 24px}
   .lang-bar{flex-wrap:wrap;justify-content:center}
 }
+body.modal-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -540,8 +541,9 @@ function renderDestGrid() {
 }
 
 function openTravelModal(id) {
-  const d = destinations.find(x => x.id === id);
-  if (!d) return;
+  const origD = destinations.find(x => x.id === id);
+  if (!origD) return;
+  const d = getTranslatedDest(origD);
   document.getElementById('tmodalImg').src = d.img;
   document.getElementById('tmodalImg').alt = d.name;
   document.getElementById('tmodalName').textContent = d.name;
@@ -557,10 +559,12 @@ function openTravelModal(id) {
   `).join('');
   document.getElementById('tmodalTip').innerHTML = `<span style="font-size:16px;flex-shrink:0">💡</span><span>${d.tip}</span>`;
   document.getElementById('travelModal').classList.add('show');
+  document.body.classList.add('modal-open');
 }
 
 function closeTravelModal() {
   document.getElementById('travelModal').classList.remove('show');
+  document.body.classList.remove('modal-open');
 }
 
 
@@ -951,6 +955,659 @@ const days = [
   },
 ];
 
+
+// ===== FULL TRANSLATIONS FOR ALL CONTENT =====
+const daysTranslations = {
+  fr: {
+    1: {
+      title: 'Jaffna — Explorez votre ville natale',
+      sub: 'Fort de Jaffna · Nallur Kovil · Plage de Casuarina',
+      km: 'Exploration locale',
+      imgCaption: 'Nallur Kandaswamy Kovil, Jaffna',
+      places: [
+        {name:'Fort de Jaffna',desc:'Fort hollandais du 17e siècle — promenez-vous sur les remparts pour la vue sur le port',time:'8h00–10h00'},
+        {name:'Nallur Kandaswamy Kovil',desc:'Temple hindou sacré, l\'un des plus importants du Sri Lanka',time:'10h30–12h00'},
+        {name:'Plage de Casuarina',desc:'Belle plage du nord, endroit parfait pour le coucher de soleil',time:'16h00–18h00'},
+        {name:'Marché municipal de Jaffna',desc:'Marché local animé — goûtez les produits frais de palmyre et les snacks',time:'14h00–15h30'},
+      ],
+      hotelName:'Thinnai Resort ou Morgan Rest House',
+      hotelPrice:'~LKR 6 000–12 000/nuit (≈17–35€)',
+      hotelNote:'Réservez à l\'avance — options limitées à Jaffna',
+      food:[
+        {dish:'Idiyappam et curry de dhal',place:'Kadai local près de chez vous'},
+        {dish:'Curry de crabe de Jaffna + riz',place:'Rio Ice Cream & Restaurant'},
+        {dish:'Kottu roti et string hoppers',place:'Cosy Restaurant, Jaffna'},
+      ],
+      tip:'Montrez à votre frère le vrai Jaffna — emmenez-le sur l\'île de Nainativu si le temps le permet (30 min de ferry depuis le quai KKD).',
+    },
+    2: {
+      title: 'Île de Nainativu + Route vers Mannar',
+      sub: 'Temple Nagadeepa · Pont d\'Adam · Fort de Mannar',
+      km: '~130 km de route au total',
+      imgCaption: 'Côte du nord du Sri Lanka',
+      places: [
+        {name:'Île de Nainativu (Nagadeepa)',desc:'Ferry depuis le quai KKD — temples bouddhistes et hindous sacrés sur l\'île',time:'7h00–11h00'},
+        {name:'Île de Mannar',desc:'Route vers Mannar — voyez le célèbre baobab (plus de 300 ans)',time:'13h00–15h00'},
+        {name:'Fort de Mannar',desc:'Fort portugais en bord de mer — vues magnifiques sur l\'océan',time:'15h00–17h00'},
+      ],
+      hotelName:'Palmyrah House Mannar ou Baobab Rest',
+      hotelPrice:'~LKR 8 000–15 000/nuit',
+      hotelNote:'Mannar a peu d\'hôtels — Jaffna est plus sûr pour l\'hébergement',
+      food:[
+        {dish:'Pol sambol et roti',place:'Maison ou hôtel local'},
+        {dish:'Poisson frais et riz (style Mannar)',place:'Restaurant local à Mannar'},
+        {dish:'Curry de mouton et hoppers',place:'Retour à Jaffna ou maison d\'hôtes à Mannar'},
+      ],
+      tip:'Le ferry pour Nainativu part toutes les ~30 min. Coût: ~LKR 80–100. Habillez-vous modestement (pas de shorts) pour entrer au temple.',
+    },
+    3: {
+      title: 'Jaffna → Anuradhapura',
+      sub: 'Cité sacrée antique · Ruwanwelisaya · Arbre Bodhi',
+      km: '~200 km · ~3,5h de route',
+      imgCaption: 'Stupa Ruwanwelisaya, Anuradhapura',
+      places: [
+        {name:'Sri Maha Bodhi',desc:'L\'arbre documenté le plus ancien du monde — figuier sacré (plus de 2 200 ans)',time:'9h00–10h30'},
+        {name:'Stupa Ruwanwelisaya',desc:'Immense stupa à dôme blanc — l\'un des plus grands au monde',time:'11h00–12h30'},
+        {name:'Jetavanaramaya',desc:'Ruines d\'un immense stupa antique — autrefois la 3e plus haute structure sur Terre',time:'13h30–15h00'},
+      ],
+      hotelName:'Ulagalla Resort ou Palm Garden Village Hotel',
+      hotelPrice:'~LKR 12 000–25 000/nuit',
+      hotelNote:'Palm Garden Village est un excellent rapport qualité-prix avec piscine',
+      food:[
+        {dish:'Egg hoppers et kiri hodi',place:'Hôtel ou arrêt en bord de route'},
+        {dish:'Riz et curry (12 currys sur une feuille de bananier)',place:'Restaurant Shalini, Anuradhapura'},
+        {dish:'Curry de dhal, papadum, sambol de coco',place:'Restaurant de l\'hôtel'},
+      ],
+      tip:'Louez un vélo dans la cité antique — meilleure façon de couvrir les ruines. Apportez un sarong pour entrer dans les temples. Pas de chaussures dans les temples.',
+    },
+    4: {
+      title: 'Anuradhapura → Polonnaruwa',
+      sub: 'Ruines médiévales · Gal Vihara · Parakrama Samudra',
+      km: '~100 km · ~2h de route',
+      imgCaption: 'Bouddha Gal Vihara, Polonnaruwa',
+      places: [
+        {name:'Temple rupestre Gal Vihara',desc:'Statues géantes de Bouddha sculptées dans le granit — artisanat à couper le souffle',time:'8h30–10h00'},
+        {name:'Cité antique de Polonnaruwa',desc:'Ruines UNESCO — Vatadage, Rankoth Vihara, complexe du Palais Royal',time:'10h00–13h00'},
+        {name:'Parakrama Samudra',desc:'Immense lac artificiel antique — magnifique au coucher du soleil',time:'17h00–18h30'},
+      ],
+      hotelName:'Deer Park Hotel Habarana ou Hotel Sudu Araliya',
+      hotelPrice:'~LKR 10 000–20 000/nuit',
+      hotelNote:'Habarana est une excellente base centrale pour le triangle culturel',
+      food:[
+        {dish:'String hoppers et lait de coco',place:'Petit-déjeuner à l\'hôtel'},
+        {dish:'Riz et 7 currys — authentique sri-lankais',place:'Restaurant Sathosa, Polonnaruwa'},
+        {dish:'Poisson grillé et légumes',place:'Restaurant Deer Park Hotel'},
+      ],
+      tip:'Louez un vélo (LKR 500) à l\'entrée pour couvrir efficacement la cité antique. Billet d\'entrée pour les étrangers: ~25 USD.',
+    },
+    5: {
+      title: 'Forteresse de Sigiriya + Dambulla',
+      sub: 'Rocher du Lion · Peintures fresques · Temples rupestres',
+      km: '~40 km · courte route',
+      imgCaption: 'Forteresse du Rocher du Lion de Sigiriya',
+      places: [
+        {name:'Sigiriya (Rocher du Lion)',desc:'Patrimoine mondial UNESCO — forteresse antique au sommet d\'un rocher volcanique de 200m. L\'ascension prend ~1,5h',time:'6h00–10h00 (partez tôt!)'},
+        {name:'Temple rupestre de Dambulla',desc:'5 grottes avec 153 statues de Bouddha et fresques antiques — site UNESCO',time:'14h00–16h00'},
+        {name:'Promenade au village de Sigiriya',desc:'Tour optionnel en vélo à travers les rizières et la jungle',time:'16h30–18h00'},
+      ],
+      hotelName:'Jetwing Vil Uyana ou Cinnamon Lodge Habarana',
+      hotelPrice:'~LKR 25 000–60 000/nuit',
+      hotelNote:'Jetwing Vil Uyana est de classe mondiale — réservez bien à l\'avance',
+      food:[
+        {dish:'Hoppers rapides avant l\'ascension',place:'Hôtel ou café du village de Sigiriya'},
+        {dish:'Riz et curry + noix de coco royale fraîche',place:'Restaurants de la ville de Dambulla'},
+        {dish:'Buffet BBQ à la sri-lankaise',place:'Restaurant de l\'hôtel — la plupart font de superbes buffets'},
+      ],
+      tip:'COMMENCEZ SIGIRIYA À 6H30 — il fait extrêmement chaud et bondé à partir de 10h. Apportez 2L d\'eau. Entrée: ~30 USD pour les étrangers.',
+    },
+    6: {
+      title: 'Sigiriya → Kandy',
+      sub: 'Temple de la Dent · Lac de Kandy · Spectacle culturel',
+      km: '~90 km · ~2,5h de route',
+      imgCaption: 'Temple de la Dent, Kandy',
+      places: [
+        {name:'Sri Dalada Maligawa (Temple de la Dent)',desc:'Site bouddhiste le plus sacré du Sri Lanka. Assistez à la cérémonie Puja à 6h30/10h00/18h30',time:'Cérémonie Puja 18h30'},
+        {name:'Promenade au Lac de Kandy',desc:'Promenade paisible autour du lac — belle architecture coloniale',time:'16h30–17h30'},
+        {name:'Spectacle de danse culturelle kandyenne',desc:'Spectacle de danse traditionnelle kandyenne — fortement recommandé pour les visiteurs',time:'19h00–20h30'},
+      ],
+      hotelName:'Hotel Suisse ou Helga\'s Folly',
+      hotelPrice:'~LKR 15 000–35 000/nuit',
+      hotelNote:'Helga\'s Folly est unique et excentrique — une icône de Kandy',
+      food:[
+        {dish:'Pittu et kiri hodi',place:'Hôtel ou kadai local'},
+        {dish:'Riz et curry style Kandy',place:'Devon Restaurant (célèbre spot local)'},
+        {dish:'Nouilles et snacks après le spectacle',place:'Whitehouse Restaurant, Kandy'},
+      ],
+      tip:'Visitez les Jardins Botaniques Royaux de Peradeniya (15 USD) le matin avant Kandy — magnifique jardin de 147 acres avec orchidées et bambou géant.',
+    },
+    7: {
+      title: 'Kandy → Nuwara Eliya (Petite Angleterre)',
+      sub: 'Plantations de thé · Lac Gregory · Parc Victoria',
+      km: '~80 km · ~2,5h (routes de montagne pittoresques)',
+      imgCaption: 'Domaines de thé, Nuwara Eliya',
+      places: [
+        {name:'Visite d\'une fabrique de thé',desc:'Découvrez comment le thé de Ceylan est fabriqué — visitez un domaine de thé en activité',time:'10h00–12h00'},
+        {name:'Jardins Botaniques de Hakgala',desc:'Superbes jardins d\'altitude à 1 745m — roses, orchidées, fougères',time:'13h00–15h00'},
+        {name:'Lac Gregory',desc:'Beau lac — louez un pédalo ou promenez-vous sur l\'esplanade',time:'16h00–17h30'},
+      ],
+      hotelName:'The Grand Hotel ou Araliya Green Hills',
+      hotelPrice:'~LKR 18 000–45 000/nuit',
+      hotelNote:'Le Grand Hotel est un classique colonial — un incontournable à Nuwara Eliya',
+      food:[
+        {dish:'Petit-déjeuner anglais ("Petite Angleterre"!)',place:'Petit-déjeuner au Grand Hotel'},
+        {dish:'Hoppers et kiri hodi après la visite du thé',place:'Café près de la fabrique de thé'},
+        {dish:'Ragoût de bœuf et légumes (air frais de montagne!)',place:'Milano Restaurant, Nuwara Eliya'},
+      ],
+      tip:'Il fait FROID la nuit (10–15°C). Emportez une couche chaude. La ville a un charme colonial britannique — explorez le champ de courses, la poste et la rue du marché.',
+    },
+    8: {
+      title: 'Nuwara Eliya — Randonnée au Pic d\'Horton',
+      sub: 'Bout du Monde · Plaines d\'Horton · Cascade Baker',
+      km: 'Randonnée ~9 km aller-retour',
+      imgCaption: 'Bout du Monde, Plaines d\'Horton',
+      places: [
+        {name:'Parc National des Plaines d\'Horton',desc:'Partez à 5h30 — randonnée jusqu\'au Bout du Monde (falaise de 880m) et au Petit Bout du Monde',time:'5h30–10h00 (partez TÔT!)'},
+        {name:'Cascade Baker',desc:'Belle cascade sur le sentier de randonnée — environ à mi-chemin de la boucle',time:'Pendant la randonnée'},
+        {name:'Marché de Nuwara Eliya et rue du marché',desc:'Marché local animé — fruits frais de montagne, fraises et légumes',time:'14h00–16h00'},
+      ],
+      hotelName:'Même hôtel — The Grand Hotel',
+      hotelPrice:'',
+      hotelNote:'Restez 2 nuits à Nuwara Eliya pour les Plaines d\'Horton',
+      food:[
+        {dish:'Très tôt — paquet de l\'hôtel ou biscuits/fruit',place:'Emportez le petit-déjeuner — les restaurants n\'ouvrent pas à 5h'},
+        {dish:'Grand brunch après la randonnée',place:'Grand Hotel ou Grand Indian restaurant, Nuwara Eliya'},
+        {dish:'Soupe chaude et kottu roti',place:'Restaurant Milano ou De Silva Food Centre'},
+      ],
+      tip:'Partez de Nuwara Eliya à 4h30 POUR ARRIVER AUX PORTES DU PARC À 5h30. La brume couvre le Bout du Monde après 9h. Entrée: ~15 USD pour les étrangers.',
+    },
+    9: {
+      title: 'Train panoramique Nuwara Eliya → Ella',
+      sub: 'Domaines de thé · Pont aux 9 Arches · Petit Pic d\'Adam',
+      km: '~60 km par le train (4h de trajet magique)',
+      imgCaption: 'Train du pays des collines, Ella',
+      places: [
+        {name:'Train Kandy–Ella (Nuwara Eliya → Ella)',desc:'Prenez le célèbre train bleu à travers les domaines de thé et les montagnes. Réservez en 2e classe observation',time:'Départ ~8h00, arrivée Ella ~12h00'},
+        {name:'Pont aux Neuf Arches',desc:'Viaduc en pierre emblématique de 1921 à travers la jungle — photographiez un train qui passe depuis le point de vue',time:'14h00–15h30'},
+        {name:'Petit Pic d\'Adam',desc:'Randonnée facile d\'1 heure avec vues panoramiques époustouflantes sur l\'Ella Gap — meilleur au coucher du soleil',time:'16h30–18h30'},
+      ],
+      hotelName:'98 Acres Resort & Spa ou Zion View Ella',
+      hotelPrice:'~LKR 20 000–55 000/nuit',
+      hotelNote:'98 Acres a les vues les plus époustouflantes d\'Ella — vaut la dépense',
+      food:[
+        {dish:'Hoppers rapides avant le train',place:'Hôtel ou café de la ville de Nuwara Eliya'},
+        {dish:'Boîte de riz dans le train ou nourriture à la gare d\'Ella',place:'Vendeurs sur le quai ou Café Chill à Ella'},
+        {dish:'Riz et curry style Ella + jus de fruit de la passion',place:'Dream Café ou Matey Hut, Ella'},
+      ],
+      tip:'RÉSERVEZ LES BILLETS DE TRAIN À L\'AVANCE sur eticket.railway.gov.lk — le train Kandy-Ella est le trajet en train le plus célèbre au monde. 2e classe observation: LKR 600.',
+    },
+    10: {
+      title: 'Ella — Chutes de Ravana + Activités d\'aventure',
+      sub: 'Ravana Ella · Ella Rock · Rafting · Canyoning · Forêt tropicale',
+      km: 'Zone locale d\'Ella + excursions à Kitulgala/Sinharaja',
+      imgCaption: 'Chutes de Ravana, Ella',
+      places: [
+        {name:'Randonnée Ella Rock',desc:'Randonnée de 4-5h aller-retour à travers les plantations de thé et la jungle jusqu\'au sommet rocheux — vues à 360° époustouflantes',time:'6h00–11h00'},
+        {name:'Chutes de Ravana Ella',desc:'Cascade impressionnante à plusieurs niveaux près de l\'autoroute A23 — associée à l\'histoire du Ramayana',time:'12h00–13h00'},
+        {name:'Rafting en eaux vives (Rivière Kelani)',desc:'Rapides palpitants de grade 3-4 près de Kitulgala — 5 km à travers un canyon de jungle',time:'Demi-journée (à organiser via un tour-opérateur)'},
+        {name:'Forêt tropicale de Sinharaja',desc:'Forêt tropicale UNESCO — oiseaux endémiques, faune rare et sentiers de jungle vierge',time:'Journée complète ou demi-journée de randonnée'},
+      ],
+      hotelName:'Même que Jour 9 — 98 Acres Resort',
+      hotelPrice:'',
+      hotelNote:'Deux nuits à Ella recommandées — il y a beaucoup à faire',
+      food:[
+        {dish:'Porridge et fruits avant la randonnée',place:'Petit-déjeuner à l\'hôtel ou Cafe Chill'},
+        {dish:'Repas rapide après la randonnée — nouilles ou riz',place:'Restaurant près des chutes de Ravana ou ville d\'Ella'},
+        {dish:'Porc épicé et kottu roti',place:'Matey Hut ou Café Aroma, Ella'},
+      ],
+      tip:'Commencez la randonnée d\'Ella Rock AVANT 6h30 — le sentier n\'est pas balisé, téléchargez l\'application Wikiloc hors ligne. Apportez 2L d\'eau et des snacks.',
+    },
+    11: {
+      title: 'Ella → Parc National de Yala',
+      sub: 'Safari aux léopards · Éléphants · Côte sauvage',
+      km: '~150 km · ~3,5h de route',
+      imgCaption: 'Observation de léopard, Parc National de Yala',
+      places: [
+        {name:'Safari Parc National de Yala (Bloc 1)',desc:'Plus haute densité de léopards au monde. Safari en jeep de 4-5h. Réservez avec un opérateur fiable',time:'14h30–19h00 (safari de l\'après-midi)'},
+        {name:'Observations d\'éléphants et paons',desc:'Éléphants, cerfs tachetés, crocodiles, paons et buffles d\'eau sont des observations courantes',time:'Pendant le safari'},
+        {name:'Plage de Yala',desc:'Plage sauvage déserte à la frontière du parc — coucher de soleil magnifique',time:'Après le safari / soirée'},
+      ],
+      hotelName:'Cinnamon Wild Yala ou Jetwing Yala',
+      hotelPrice:'~LKR 40 000–80 000/nuit (style lodge)',
+      hotelNote:'Réservez les lodges de Yala 3-6 mois à l\'avance — ils se remplissent vite. Gamme moyenne: Chaaya Wild Yala',
+      food:[
+        {dish:'Petit-déjeuner à l\'hôtel — tôt avant la route',place:'Hôtel à Ella'},
+        {dish:'Boîte de riz dans le véhicule vers Yala',place:'Emportez d\'Ella ou arrêt en route'},
+        {dish:'BBQ sous les étoiles au lodge',place:'Restaurant du lodge safari de Yala'},
+      ],
+      tip:'Réservez le safari de Yala avec une entreprise réputée — évitez les rabatteurs. Budget: ~50-80 USD par personne pour le véhicule + entrée. Allez l\'APRÈS-MIDI quand les léopards sont actifs.',
+    },
+    12: {
+      title: 'Yala → Plage de Mirissa + Observation de baleines',
+      sub: 'Baleines bleues · Observation de dauphins · Coconut Hill',
+      km: '~120 km · ~2,5h de route',
+      imgCaption: 'Observation de baleines, Mirissa',
+      places: [
+        {name:'Observation de baleines (Mirissa)',desc:'Capitale mondiale des baleines bleues! Excursion en bateau de 3-4h. Meilleur Nov–Avril',time:'6h00–10h00 (départ tôt)'},
+        {name:'Coconut Hill Mirissa',desc:'Point de vue Instagram emblématique sur la baie de Mirissa avec des palmiers',time:'Fin d\'après-midi'},
+        {name:'Plage de Mirissa',desc:'Plage de sable doré — nagez, détendez-vous, regardez le coucher de soleil avec une noix de coco royale',time:'15h00–18h30'},
+      ],
+      hotelName:'The Frangipani Tree ou Paradise Beach Club',
+      hotelPrice:'~LKR 12 000–25 000/nuit',
+      hotelNote:'Réservez l\'observation de baleines à l\'avance — Raja & the Whales est un opérateur de premier ordre',
+      food:[
+        {dish:'Petit-déjeuner léger avant l\'observation',place:'Café de plage au port'},
+        {dish:'Poisson grillé frais — directement sur la plage',place:'Cabanes de plage de Mirissa — beaucoup de bons'},
+        {dish:'Curry de crevettes et cocktail au coucher de soleil',place:'Rotti restaurant ou Dewmini Roti Shop'},
+      ],
+      tip:'Meilleure saison des baleines: Nov–Avril. Les baleines bleues sont immenses — c\'est inoubliable. Les dauphins spinners nagent souvent à côté du bateau. Réservez Raja & the Whales ou Ocean Eco Tours.',
+    },
+    13: {
+      title: 'Mirissa → Fort hollandais de Galle',
+      sub: 'Fort colonial · Phare · Rues boutiques',
+      km: '~40 km · ~1h de route',
+      imgCaption: 'Remparts du Fort hollandais de Galle',
+      places: [
+        {name:'Fort hollandais de Galle',desc:'Fort UNESCO — promenez-vous sur les remparts pour les vues sur l\'océan. Datant de 1588',time:'9h00–12h00'},
+        {name:'Phare de Galle',desc:'Phare pittoresque à la pointe du fort — superbe spot photo',time:'Dans la promenade du fort'},
+        {name:'Rues boutiques du Fort de Galle',desc:'Galeries d\'art, cafés, bijouteries et boutiques d\'artisanat à l\'intérieur des murs du fort',time:'12h00–14h00'},
+        {name:'Plage d\'Unawatuna',desc:'Belle plage abritée, à 5 min de Galle — eau calme pour la baignade',time:'15h00–18h00'},
+      ],
+      hotelName:'Amangalla ou Fort Bazaar (dans le fort)',
+      hotelPrice:'~LKR 35 000–150 000/nuit',
+      hotelNote:'Gamme moyenne: The Bartizan Galle — excellent rapport qualité-prix boutique dans le fort',
+      food:[
+        {dish:'Petit-déjeuner sri-lankais à l\'hôtel de Mirissa',place:'Hôtel ou café de Mirissa'},
+        {dish:'Déjeuner au café du fort — essayez le curry de poisson local',place:'Fort Printers ou Pedlar\'s Inn Café'},
+        {dish:'Fruits de mer frais avec vue sur le fort',place:'The Fort Restaurant ou Fortaleza dans le fort'},
+      ],
+      tip:'Promenez-vous sur les remparts du fort au coucher du soleil — l\'une des plus belles expériences au Sri Lanka. Le fort est entièrement accessible à pied en 2-3 heures.',
+    },
+    14: {
+      title: 'Galle → Colombo — Grand Final',
+      sub: 'Temple Gangaramaya · Fort de Colombo · Galle Face Green',
+      km: '~130 km · ~2,5h de route',
+      imgCaption: 'Galle Face Green, Colombo',
+      places: [
+        {name:'Temple Gangaramaya',desc:'Temple bouddhiste éclectique avec musée plein d\'artefacts du monde entier — une icône de Colombo',time:'10h00–11h30'},
+        {name:'Galle Face Green',desc:'Promenade emblématique en bord d\'océan — mangez de la street food locale au coucher du soleil sur l\'océan Indien',time:'17h00–19h00'},
+        {name:'Fort de Colombo et Marché Pettah',desc:'Ancien quartier colonial rencontre un bazar chaotique — idéal pour les souvenirs et les épices',time:'12h00–14h00'},
+        {name:'Parc Viharamahadevi',desc:'Le plus grand parc de Colombo avec le Bouddha doré géant — promenade paisible l\'après-midi',time:'15h00–16h30'},
+      ],
+      hotelName:'Cinnamon Grand ou Hilton Colombo',
+      hotelPrice:'~LKR 30 000–75 000/nuit',
+      hotelNote:'Option économique: Colombo City Hotel près de la gare Fort — bon emplacement',
+      food:[
+        {dish:'Hoppers et dhal — dernier petit-déjeuner sri-lankais',place:'Restaurant de l\'hôtel ou café de Galle'},
+        {dish:'Curry de crabe au Ministry of Crab!',place:'Ministry of Crab, Colombo — INCONTOURNABLE, réservez à l\'avance'},
+        {dish:'Boissons au coucher du soleil et fruits de mer',place:'Véranda du Galle Face Hotel ou Nineties Restaurant'},
+      ],
+      tip:'Ministry of Crab est l\'un des 50 meilleurs restaurants d\'Asie — RÉSERVEZ DES JOURS À L\'AVANCE. C\'est le dîner de célébration parfait pour terminer le voyage!',
+    },
+  },
+  de: {
+    1: {
+      title: 'Jaffna — Entdecke deine Heimatstadt',
+      sub: 'Jaffna Fort · Nallur Kovil · Casuarina-Strand',
+      km: 'Lokale Erkundung',
+      imgCaption: 'Nallur Kandaswamy Kovil, Jaffna',
+      places: [
+        {name:'Jaffna Fort',desc:'Holländische Festung aus dem 17. Jh. — Spaziergang auf den Mauern mit Hafenblick',time:'8:00–10:00'},
+        {name:'Nallur Kandaswamy Kovil',desc:'Heiliger Hindu-Tempel, einer der wichtigsten in Sri Lanka',time:'10:30–12:00'},
+        {name:'Casuarina-Strand',desc:'Schöner Nordstrand, perfekter Sonnenuntergangsort',time:'16:00–18:00'},
+        {name:'Jaffna Stadtmarkt',desc:'Lebhafter lokaler Markt — probieren Sie frische Palmyrah-Produkte & Snacks',time:'14:00–15:30'},
+      ],
+      hotelName:'Thinnai Resort oder Morgan Rest House',
+      hotelPrice:'~LKR 6.000–12.000/Nacht (≈17–35€)',
+      hotelNote:'Im Voraus buchen — begrenzte gute Optionen in Jaffna',
+      food:[
+        {dish:'Idiyappam & Dhal-Curry',place:'Lokaler Kadai in der Nähe'},
+        {dish:'Jaffna Krabben-Curry + Reis',place:'Rio Ice Cream & Restaurant'},
+        {dish:'Kottu Roti & String Hoppers',place:'Cosy Restaurant, Jaffna'},
+      ],
+      tip:'Zeigen Sie Ihrem Bruder das echte Jaffna — nehmen Sie ihn mit zur Insel Nainativu wenn die Zeit es erlaubt (30 Min. Fähre vom KKD-Pier).',
+    },
+    2: {
+      title: 'Nainativu-Insel + Fahrt nach Mannar',
+      sub: 'Nagadeepa-Tempel · Adamsbrücke · Mannar Fort',
+      km: '~130 km Fahrt insgesamt',
+      imgCaption: 'Nordküste Sri Lankas',
+      places: [
+        {name:'Nainativu-Insel (Nagadeepa)',desc:'Fähre vom KKD-Pier — heilige buddhistische & hinduistische Tempel auf der Insel',time:'7:00–11:00'},
+        {name:'Mannar-Insel',desc:'Fahrt nach Mannar — sehen Sie den berühmten Baobab-Baum (über 300 Jahre alt)',time:'13:00–15:00'},
+        {name:'Mannar Fort',desc:'Portugiesische Festung direkt an der Küste — atemberaubende Meerblicke',time:'15:00–17:00'},
+      ],
+      hotelName:'Palmyrah House Mannar oder Baobab Rest',
+      hotelPrice:'~LKR 8.000–15.000/Nacht',
+      hotelNote:'Mannar hat begrenzte Hotels — Jaffna ist sicherer für Unterkünfte',
+      food:[
+        {dish:'Pol Sambol & Roti',place:'Zuhause oder lokales Hotel'},
+        {dish:'Frischer Fisch & Reis (Mannar-Stil)',place:'Lokales Restaurant in Mannar'},
+        {dish:'Hammel-Curry & Hoppers',place:'Zurück in Jaffna oder Mannar Gästehaus'},
+      ],
+      tip:'Die Fähre nach Nainativu fährt alle ~30 Min. Kosten: ~LKR 80–100. Kleiden Sie sich bescheiden (keine Shorts) für den Tempelbesuch.',
+    },
+    3: {
+      title: 'Jaffna → Anuradhapura',
+      sub: 'Antike heilige Stadt · Ruwanwelisaya · Bodhi-Baum',
+      km: '~200 km · ~3,5 Std. Fahrt',
+      imgCaption: 'Ruwanwelisaya Stupa, Anuradhapura',
+      places: [
+        {name:'Sri Maha Bodhi',desc:'Der älteste dokumentierte Baum der Welt — heiliger Feigenbaum (über 2.200 Jahre)',time:'9:00–10:30'},
+        {name:'Ruwanwelisaya Stupa',desc:'Riesige weiße Kuppelstupa — eine der größten der Welt',time:'11:00–12:30'},
+        {name:'Jetavanaramaya',desc:'Ruinen einer riesigen antiken Stupa — einst das 3. höchste Bauwerk der Erde',time:'13:30–15:00'},
+      ],
+      hotelName:'Ulagalla Resort oder Palm Garden Village Hotel',
+      hotelPrice:'~LKR 12.000–25.000/Nacht',
+      hotelNote:'Palm Garden Village ist ein hervorragendes Preis-Leistungs-Verhältnis mit Pool',
+      food:[
+        {dish:'Egg Hoppers & Kiri Hodi',place:'Hotel oder Rastplatz unterwegs'},
+        {dish:'Reis & Curry (12 Currys auf einem Bananenblatt)',place:'Shalini Restaurant, Anuradhapura'},
+        {dish:'Dhal-Curry, Papadum, Kokos-Sambol',place:'Hotelrestaurant'},
+      ],
+      tip:'Mieten Sie ein Fahrrad in der antiken Stadt — beste Art, die Ruinen zu erkunden. Bringen Sie einen Sarong für den Tempelbesuch mit. Keine Schuhe in Tempeln.',
+    },
+    4: {
+      title: 'Anuradhapura → Polonnaruwa',
+      sub: 'Mittelalterliche Ruinen · Gal Vihara · Parakrama Samudra',
+      km: '~100 km · ~2 Std. Fahrt',
+      imgCaption: 'Gal Vihara Buddha, Polonnaruwa',
+      places: [
+        {name:'Gal Vihara Felsentempel',desc:'Riesige Buddha-Statuen direkt in Granit gemeißelt — atemberaubende Handwerkskunst',time:'8:30–10:00'},
+        {name:'Antike Stadt Polonnaruwa',desc:'UNESCO-Ruinen — Vatadage, Rankoth Vihara, Königspalast-Komplex',time:'10:00–13:00'},
+        {name:'Parakrama Samudra',desc:'Riesiger antiker Stausee — wunderschön bei Sonnenuntergang',time:'17:00–18:30'},
+      ],
+      hotelName:'Deer Park Hotel Habarana oder Hotel Sudu Araliya',
+      hotelPrice:'~LKR 10.000–20.000/Nacht',
+      hotelNote:'Habarana ist eine großartige zentrale Basis für das Kulturdreieck',
+      food:[
+        {dish:'String Hoppers & Kokosmilch',place:'Hotelfrühstück'},
+        {dish:'Reis & 7 Currys — authentisch sri-lankisch',place:'Sathosa Restaurant, Polonnaruwa'},
+        {dish:'Gegrillter Fisch & Gemüse',place:'Deer Park Hotel Restaurant'},
+      ],
+      tip:'Mieten Sie ein Fahrrad (LKR 500) am Eingang, um die antike Stadt effizient zu erkunden. Eintrittskarte für Ausländer: ~25 USD.',
+    },
+    5: {
+      title: 'Sigiriya Felsenfestung + Dambulla',
+      sub: 'Löwenfels · Fresken · Höhlentempel',
+      km: '~40 km · kurze Fahrt',
+      imgCaption: 'Sigiriya Löwenfels-Festung',
+      places: [
+        {name:'Sigiriya (Löwenfels)',desc:'UNESCO-Welterbe — antike Festung auf einem 200m hohen Vulkanfelsen. Aufstieg dauert ~1,5 Std.',time:'6:00–10:00 (früh starten!)'},
+        {name:'Dambulla Höhlentempel',desc:'5 Höhlen mit 153 Buddha-Statuen & antiken Wandmalereien — UNESCO-Stätte',time:'14:00–16:00'},
+        {name:'Sigiriya Dorf-Spaziergang',desc:'Optionale Dorf-Radtour durch Reisfelder & Dschungel',time:'16:30–18:00'},
+      ],
+      hotelName:'Jetwing Vil Uyana oder Cinnamon Lodge Habarana',
+      hotelPrice:'~LKR 25.000–60.000/Nacht',
+      hotelNote:'Jetwing Vil Uyana ist Weltklasse — weit im Voraus buchen',
+      food:[
+        {dish:'Schnelle Hoppers vor dem Aufstieg',place:'Hotel oder Sigiriya Dorf-Café'},
+        {dish:'Reis & Curry + frische Königskokosnuss',place:'Restaurants in Dambulla Stadt'},
+        {dish:'BBQ-Buffet sri-lankischer Art',place:'Hotelrestaurant — die meisten machen hervorragende Buffets'},
+      ],
+      tip:'BEGINNEN SIE SIGIRIYA UM 6:30 — es wird extrem heiß und überfüllt ab 10 Uhr. Bringen Sie 2L Wasser mit. Eintritt: ~30 USD für Ausländer.',
+    },
+    6: {
+      title: 'Sigiriya → Kandy',
+      sub: 'Zahntempel · Kandy-See · Kulturshow',
+      km: '~90 km · ~2,5 Std. Fahrt',
+      imgCaption: 'Zahntempel, Kandy',
+      places: [
+        {name:'Sri Dalada Maligawa (Zahntempel)',desc:'Heiligster buddhistischer Ort in Sri Lanka. Besuchen Sie die Puja-Zeremonie um 6:30/10:00/18:30',time:'Puja-Zeremonie 18:30'},
+        {name:'Kandy See-Spaziergang',desc:'Friedlicher Spaziergang um den See — schöne Kolonialarchitektur',time:'16:30–17:30'},
+        {name:'Kandyan Kulturtanz-Show',desc:'Traditionelle kandische Tanzaufführung — sehr empfehlenswert für Besucher',time:'19:00–20:30'},
+      ],
+      hotelName:'Hotel Suisse oder Helga\'s Folly',
+      hotelPrice:'~LKR 15.000–35.000/Nacht',
+      hotelNote:'Helga\'s Folly ist einzigartig und exzentrisch — eine Kandy-Ikone',
+      food:[
+        {dish:'Pittu & Kiri Hodi',place:'Hotel oder lokaler Kadai'},
+        {dish:'Kandy-Stil Reis & Curry',place:'Devon Restaurant (berühmter lokaler Spot)'},
+        {dish:'Nudeln & Snacks nach der Show',place:'Whitehouse Restaurant, Kandy'},
+      ],
+      tip:'Besuchen Sie die Königlichen Botanischen Gärten von Peradeniya (15 USD) morgens vor Kandy — wunderschöner 147 Hektar großer Garten mit Orchideen & Riesenbambus.',
+    },
+    7: {
+      title: 'Kandy → Nuwara Eliya (Klein-England)',
+      sub: 'Teeplantagen · Gregory-See · Victoria-Park',
+      km: '~80 km · ~2,5 Std. (malerische Bergstraßen)',
+      imgCaption: 'Tee-Plantagen, Nuwara Eliya',
+      places: [
+        {name:'Teefabrik-Tour',desc:'Sehen Sie wie Ceylon-Tee hergestellt wird — besuchen Sie eine aktive Teeplantage',time:'10:00–12:00'},
+        {name:'Hakgala Botanische Gärten',desc:'Atemberaubende Höhengärten auf 1.745m — Rosen, Orchideen, Farne',time:'13:00–15:00'},
+        {name:'Gregory-See',desc:'Schöner See — mieten Sie ein Tretboot oder spazieren Sie die Promenade entlang',time:'16:00–17:30'},
+      ],
+      hotelName:'The Grand Hotel oder Araliya Green Hills',
+      hotelPrice:'~LKR 18.000–45.000/Nacht',
+      hotelNote:'Das Grand Hotel ist ein kolonialer Klassiker — ein Muss in Nuwara Eliya',
+      food:[
+        {dish:'Englisches Frühstück ("Klein-England"!)',place:'Grand Hotel Frühstück'},
+        {dish:'Hoppers & Kiri Hodi nach der Tee-Tour',place:'Café bei der Teefabrik'},
+        {dish:'Rindfleischeintopf & Gemüse (frische Bergluft!)',place:'Milano Restaurant, Nuwara Eliya'},
+      ],
+      tip:'Es wird KALT nachts (10–15°C). Packen Sie warme Kleidung ein. Die Stadt hat britischen Kolonialcharme — erkunden Sie die Rennbahn, das Postamt und die Marktstraße.',
+    },
+    8: {
+      title: 'Nuwara Eliya — Horton Plains Wanderung',
+      sub: 'World\'s End · Horton Plains · Baker-Wasserfall',
+      km: '~9 km Hin- und Rückweg',
+      imgCaption: 'World\'s End, Horton Plains',
+      places: [
+        {name:'Horton Plains Nationalpark',desc:'Start um 5:30 — Wanderung zum World\'s End (880m Klippe) und zum kleinen World\'s End',time:'5:30–10:00 (FRÜH starten!)'},
+        {name:'Baker-Wasserfall',desc:'Schöner Wasserfall auf dem Wanderweg — etwa auf halbem Weg der Runde',time:'Während der Wanderung'},
+        {name:'Nuwara Eliya Markt & Marktstraße',desc:'Lebhafter lokaler Markt — frisches Bergobst, Erdbeeren und Gemüse',time:'14:00–16:00'},
+      ],
+      hotelName:'Gleiches Hotel — The Grand Hotel',
+      hotelPrice:'',
+      hotelNote:'Bleiben Sie 2 Nächte in Nuwara Eliya für Horton Plains',
+      food:[
+        {dish:'Sehr früh — Hotelpaket oder Kekse/Obst',place:'Nehmen Sie Frühstück mit — Restaurants öffnen nicht um 5 Uhr'},
+        {dish:'Großer Brunch nach der Wanderung',place:'Grand Hotel oder Grand Indian Restaurant, Nuwara Eliya'},
+        {dish:'Heiße Suppe & Kottu Roti',place:'Milano Restaurant oder De Silva Food Centre'},
+      ],
+      tip:'Verlassen Sie Nuwara Eliya um 4:30 UM BIS 5:30 AN DEN PARKTOREN ZU SEIN. Nebel bedeckt das World\'s End nach 9 Uhr. Eintritt: ~15 USD für Ausländer.',
+    },
+    9: {
+      title: 'Panoramazug Nuwara Eliya → Ella',
+      sub: 'Teeplantagen · Neun-Bogen-Brücke · Little Adam\'s Peak',
+      km: '~60 km mit dem Zug (4 Std. magische Fahrt)',
+      imgCaption: 'Hügelland-Zug, Ella',
+      places: [
+        {name:'Kandy–Ella Zug (Nuwara Eliya → Ella)',desc:'Nehmen Sie den berühmten blauen Zug durch Teeplantagen & Berge. Buchen Sie 2. Klasse Aussichtswagen',time:'Abfahrt ~8:00, Ankunft Ella ~12:00'},
+        {name:'Neun-Bogen-Brücke',desc:'Ikonisches Steinviadukt von 1921 durch den Dschungel — fotografieren Sie einen vorbeifahrenden Zug vom Aussichtspunkt',time:'14:00–15:30'},
+        {name:'Little Adam\'s Peak',desc:'Einfache 1-stündige Wanderung mit atemberaubendem Panoramablick auf den Ella Gap — am besten bei Sonnenuntergang',time:'16:30–18:30'},
+      ],
+      hotelName:'98 Acres Resort & Spa oder Zion View Ella',
+      hotelPrice:'~LKR 20.000–55.000/Nacht',
+      hotelNote:'98 Acres hat die atemberaubendsten Ausblicke in Ella — die Ausgabe wert',
+      food:[
+        {dish:'Schnelle Hoppers vor dem Zug',place:'Hotel oder Nuwara Eliya Stadt-Café'},
+        {dish:'Reisbox im Zug oder Essen am Ella-Bahnhof',place:'Plattformverkäufer oder Café Chill in Ella'},
+        {dish:'Reis & Curry Ella-Stil + Passionsfrucht-Saft',place:'Dream Café oder Matey Hut, Ella'},
+      ],
+      tip:'BUCHEN SIE ZUGTICKETS IM VORAUS auf eticket.railway.gov.lk — der Kandy-Ella Zug ist die berühmteste Zugfahrt der Welt. 2. Klasse Aussichtsdeck: LKR 600.',
+    },
+    10: {
+      title: 'Ella — Ravana-Wasserfall + Abenteueraktivitäten',
+      sub: 'Ravana Ella · Ella Rock · Rafting · Canyoning · Regenwald',
+      km: 'Lokaler Ella-Bereich + Kitulgala/Sinharaja Tagesausflüge',
+      imgCaption: 'Ravana-Wasserfall, Ella',
+      places: [
+        {name:'Ella Rock Wanderung',desc:'4-5 Std. Hin-und-Rück-Wanderung durch Teeplantagen & Dschungel zum Felsgipfel — atemberaubende 360°-Ausblicke',time:'6:00–11:00'},
+        {name:'Ravana Ella Wasserfall',desc:'Beeindruckender Stufenwasserfall nahe der A23-Autobahn — mit der Ramayana-Geschichte verbunden',time:'12:00–13:00'},
+        {name:'Wildwasser-Rafting (Kelani-Fluss)',desc:'Aufregende Grad 3-4 Stromschnellen bei Kitulgala — 5 km durch Dschungelschlucht',time:'Halbtagesausflug (über Reiseveranstalter)'},
+        {name:'Sinharaja Regenwald',desc:'UNESCO-Regenwald — endemische Vögel, seltene Tierwelt & unberührte Dschungelpfade',time:'Ganztags- oder Halbtagswanderung'},
+      ],
+      hotelName:'Wie Tag 9 — 98 Acres Resort',
+      hotelPrice:'',
+      hotelNote:'Zwei Nächte in Ella empfohlen — es gibt viel zu tun',
+      food:[
+        {dish:'Porridge & Obst vor der Wanderung',place:'Hotelfrühstück oder Cafe Chill'},
+        {dish:'Schnelles Essen nach der Wanderung — Nudeln oder Reis',place:'Restaurant nahe Ravana-Wasserfall oder Ella-Stadt'},
+        {dish:'Scharfes Schweinefleisch & Kottu Roti',place:'Matey Hut oder Café Aroma, Ella'},
+      ],
+      tip:'Beginnen Sie die Ella Rock Wanderung VOR 6:30 — der Weg ist nicht markiert, laden Sie die Wikiloc-App offline herunter. Bringen Sie 2L Wasser und Snacks mit.',
+    },
+    11: {
+      title: 'Ella → Yala Nationalpark',
+      sub: 'Leoparden-Safari · Elefanten · Wilde Küste',
+      km: '~150 km · ~3,5 Std. Fahrt',
+      imgCaption: 'Leopard-Sichtung, Yala Nationalpark',
+      places: [
+        {name:'Yala Nationalpark Safari (Block 1)',desc:'Höchste Leopardendichte der Welt. 4-5 Std. Jeep-Safari. Buchen Sie bei zuverlässigem Anbieter',time:'14:30–19:00 (Nachmittags-Safari)'},
+        {name:'Elefanten- & Pfauen-Sichtungen',desc:'Elefanten, Axis-Hirsche, Krokodile, Pfauen & Wasserbüffel sind häufige Sichtungen',time:'Während der Safari'},
+        {name:'Yala-Strand',desc:'Wilder verlassener Strand an der Parkgrenze — atemberaubender Sonnenuntergang',time:'Nach der Safari / abends'},
+      ],
+      hotelName:'Cinnamon Wild Yala oder Jetwing Yala',
+      hotelPrice:'~LKR 40.000–80.000/Nacht (Lodge-Stil)',
+      hotelNote:'Buchen Sie Yala-Lodges 3-6 Monate im Voraus — sie füllen sich schnell. Mittelklasse: Chaaya Wild Yala',
+      food:[
+        {dish:'Hotelfrühstück — früh vor der Fahrt',place:'Ella Hotel'},
+        {dish:'Reisbox im Fahrzeug nach Yala',place:'Von Ella mitnehmen oder unterwegs anhalten'},
+        {dish:'BBQ unter den Sternen in der Lodge',place:'Yala Safari Lodge Restaurant'},
+      ],
+      tip:'Buchen Sie Yala Safari bei einem seriösen Unternehmen — vermeiden Sie zufällige Schlepper. Budget: ~50-80 USD pro Person für Fahrzeug + Eintritt. Gehen Sie am NACHMITTAG wenn Leoparden aktiv sind.',
+    },
+    12: {
+      title: 'Yala → Mirissa Strand + Walbeobachtung',
+      sub: 'Blauwale · Delfinbeobachtung · Coconut Hill',
+      km: '~120 km · ~2,5 Std. Fahrt',
+      imgCaption: 'Walbeobachtung, Mirissa',
+      places: [
+        {name:'Walbeobachtung (Mirissa)',desc:'Hauptstadt der Blauwale! 3-4 Std. Bootstour. Beste Zeit Nov–April',time:'6:00–10:00 (früh losfahren)'},
+        {name:'Coconut Hill Mirissa',desc:'Ikonischer Instagram-Aussichtspunkt über die Bucht von Mirissa mit Palmen',time:'Spätnachmittag'},
+        {name:'Mirissa Strand',desc:'Goldener Sandstrand — schwimmen, entspannen, Sonnenuntergang mit Königskokosnuss genießen',time:'15:00–18:30'},
+      ],
+      hotelName:'The Frangipani Tree oder Paradise Beach Club',
+      hotelPrice:'~LKR 12.000–25.000/Nacht',
+      hotelNote:'Buchen Sie Walbeobachtung im Voraus — Raja & the Whales ist ein Top-Anbieter',
+      food:[
+        {dish:'Leichtes Frühstück vor der Walbeobachtung',place:'Strandcafé am Hafen'},
+        {dish:'Frischer gegrillter Fisch — direkt am Strand',place:'Mirissa Strandbuden — viele gute'},
+        {dish:'Garnelen-Curry & Sonnenuntergangs-Cocktail',place:'Rotti Restaurant oder Dewmini Roti Shop'},
+      ],
+      tip:'Beste Wal-Saison: Nov–April. Blauwale sind riesig — unvergesslich. Spinnerdelfine schwimmen oft neben dem Boot. Buchen Sie Raja & the Whales oder Ocean Eco Tours.',
+    },
+    13: {
+      title: 'Mirissa → Galle Holländisches Fort',
+      sub: 'Kolonialfestung · Leuchtturm · Boutique-Straßen',
+      km: '~40 km · ~1 Std. Fahrt',
+      imgCaption: 'Galle Holländisches Fort Mauern',
+      places: [
+        {name:'Galle Holländisches Fort',desc:'UNESCO-Fort — spazieren Sie auf den Mauern für Meerblicke. Seit 1588',time:'9:00–12:00'},
+        {name:'Galle Leuchtturm',desc:'Malerischer Leuchtturm an der Fortspitze — großartiger Fotospot',time:'Während des Fort-Spaziergangs'},
+        {name:'Galle Fort Boutique-Straßen',desc:'Kunstgalerien, Cafés, Juweliere & Handwerksläden innerhalb der Festungsmauern',time:'12:00–14:00'},
+        {name:'Unawatuna Strand',desc:'Schöner geschützter Buchtstrand, 5 Min. von Galle — ruhiges Wasser zum Schwimmen',time:'15:00–18:00'},
+      ],
+      hotelName:'Amangalla oder Fort Bazaar (im Fort)',
+      hotelPrice:'~LKR 35.000–150.000/Nacht',
+      hotelNote:'Mittelklasse: The Bartizan Galle — ausgezeichnetes Preis-Leistungs-Boutique im Fort',
+      food:[
+        {dish:'Sri-lankisches Frühstück im Mirissa Hotel',place:'Hotel oder Mirissa Café'},
+        {dish:'Mittagessen im Fort-Café — probieren Sie das lokale Fisch-Curry',place:'Fort Printers oder Pedlar\'s Inn Café'},
+        {dish:'Frische Meeresfrüchte mit Fortblick',place:'The Fort Restaurant oder Fortaleza im Fort'},
+      ],
+      tip:'Spazieren Sie bei Sonnenuntergang auf den Festungsmauern — eine der schönsten Erfahrungen in Sri Lanka. Das Fort ist in 2-3 Stunden komplett zu Fuß erreichbar.',
+    },
+    14: {
+      title: 'Galle → Colombo — Großes Finale',
+      sub: 'Gangaramaya-Tempel · Colombo Fort · Galle Face Green',
+      km: '~130 km · ~2,5 Std. Fahrt',
+      imgCaption: 'Galle Face Green, Colombo',
+      places: [
+        {name:'Gangaramaya-Tempel',desc:'Eklektischer buddhistischer Tempel mit Museum voller Artefakte aus aller Welt — eine Colombo-Ikone',time:'10:00–11:30'},
+        {name:'Galle Face Green',desc:'Ikonische Ozean-Promenade — essen Sie lokales Streetfood bei Sonnenuntergang über dem Indischen Ozean',time:'17:00–19:00'},
+        {name:'Colombo Fort & Pettah-Markt',desc:'Altes Kolonialviertel trifft chaotischen Basar — großartig für Souvenirs & Gewürze',time:'12:00–14:00'},
+        {name:'Viharamahadevi-Park',desc:'Colombos größter Park mit dem riesigen goldenen Buddha — friedlicher Nachmittagsspaziergang',time:'15:00–16:30'},
+      ],
+      hotelName:'Cinnamon Grand oder Hilton Colombo',
+      hotelPrice:'~LKR 30.000–75.000/Nacht',
+      hotelNote:'Budget-Option: Colombo City Hotel nahe Fort-Bahnhof — gute Lage',
+      food:[
+        {dish:'Hoppers & Dhal — letztes sri-lankisches Frühstück',place:'Hotelrestaurant oder Galle Café'},
+        {dish:'Krabben-Curry im Ministry of Crab!',place:'Ministry of Crab, Colombo — MUSS MAN MACHEN, vorher buchen'},
+        {dish:'Sonnenuntergangs-Drinks & Meeresfrüchte',place:'Galle Face Hotel Veranda oder Nineties Restaurant'},
+      ],
+      tip:'Ministry of Crab ist eines der 50 besten Restaurants Asiens — BUCHEN SIE TAGE IM VORAUS. Es ist das perfekte Feier-Dinner zum Abschluss der Reise!',
+    },
+  },
+};
+
+// Destination translations
+const destTranslations = {
+  fr: {
+    jaffna: {tip:'Prenez le Northern Railway — la ligne restaurée est une excellente expérience et traverse de magnifiques paysages plats du cœur tamoul.'},
+    anuradhapura: {tip:'Louez un vélo dans la cité antique — les ruines s\'étendent sur 40 km² et le vélo est idéal pour tout couvrir.'},
+    polonnaruwa: {tip:'Louez un vélo (LKR 500) à l\'entrée — c\'est la façon la plus amusante de parcourir Gal Vihara, Rankoth Vihara et les ruines du Palais Royal.'},
+    sigiriya: {tip:'Commencez l\'ascension AVANT 7H — il fait très chaud et extrêmement bondé à 10h. Apportez 2 litres d\'eau. Droit d\'entrée: ~30 USD étrangers.'},
+    kandy: {tip:'Ne manquez pas la cérémonie Puja du soir au Temple de la Dent à 18h30 — une expérience culturelle magique avec des tambours et des chants.'},
+    'nuwara-eliya': {tip:'Il fait FROID la nuit (10–15°C). Emportez une couche chaude. La ville a un charme colonial britannique.'},
+    ella: {tip:'RÉSERVEZ LE TRAIN À L\'AVANCE sur eticket.railway.gov.lk — le wagon observation 2e classe coûte LKR 600 et offre les meilleures vues!'},
+    yala: {tip:'Faites le safari de l\'APRÈS-MIDI (14h30–19h) — les léopards sont plus actifs au crépuscule. Yala a la plus haute densité de léopards au monde.'},
+    mirissa: {tip:'Réservez l\'observation de baleines au moins 2 jours à l\'avance — Raja & the Whales ou Ocean Eco Tours sont les meilleurs opérateurs.'},
+    galle: {tip:'Promenez-vous sur les remparts au COUCHER DU SOLEIL — une des plus belles expériences au Sri Lanka.'},
+    colombo: {tip:'Réservez le Ministry of Crab à Old Dutch Hospital DES JOURS À L\'AVANCE — c\'est l\'un des 50 meilleurs restaurants d\'Asie!'},
+  },
+  de: {
+    jaffna: {tip:'Nehmen Sie die Northern Railway — die restaurierte Strecke ist eine tolle Erfahrung und führt durch schöne flache tamilische Landschaft.'},
+    anuradhapura: {tip:'Mieten Sie ein Fahrrad in der antiken Stadt — die Ruinen erstrecken sich über 40 km² und Radfahren ist ideal.'},
+    polonnaruwa: {tip:'Mieten Sie ein Fahrrad (LKR 500) am Eingang — es ist die unterhaltsamste Art, zwischen Gal Vihara, Rankoth Vihara und den Palast-Ruinen zu fahren.'},
+    sigiriya: {tip:'Beginnen Sie den Aufstieg VOR 7 UHR — es wird sehr heiß und extrem überfüllt um 10 Uhr. Bringen Sie 2 Liter Wasser mit. Eintritt: ~30 USD Ausländer.'},
+    kandy: {tip:'Verpassen Sie nicht die abendliche Puja-Zeremonie im Zahntempel um 18:30 — eine magische kulturelle Erfahrung mit Trommeln und Gesängen.'},
+    'nuwara-eliya': {tip:'Es wird KALT nachts (10–15°C). Packen Sie warme Kleidung ein. Die Stadt hat britischen Kolonialcharme.'},
+    ella: {tip:'BUCHEN SIE DEN ZUG IM VORAUS auf eticket.railway.gov.lk — der Aussichtswagen 2. Klasse kostet LKR 600 und bietet die besten Ausblicke!'},
+    yala: {tip:'Machen Sie die NACHMITTAGS-Safari (14:30–19:00) — Leoparden sind bei Dämmerung am aktivsten. Yala hat die höchste Leopardendichte der Welt.'},
+    mirissa: {tip:'Buchen Sie Walbeobachtung mindestens 2 Tage im Voraus — Raja & the Whales oder Ocean Eco Tours sind Top-Anbieter.'},
+    galle: {tip:'Spazieren Sie bei SONNENUNTERGANG auf den Festungsmauern — eine der schönsten Erfahrungen in Sri Lanka.'},
+    colombo: {tip:'Buchen Sie Ministry of Crab im Old Dutch Hospital TAGE IM VORAUS — es ist eines der 50 besten Restaurants Asiens!'},
+  },
+};
+
+const regionNamesTranslated = {
+  en: {north:'North Sri Lanka',cultural:'Cultural Triangle',hill:'Hill Country',south:'South & Colombo'},
+  fr: {north:'Nord du Sri Lanka',cultural:'Triangle culturel',hill:'Pays des collines',south:'Sud & Colombo'},
+  de: {north:'Norden Sri Lankas',cultural:'Kulturelles Dreieck',hill:'Hügelland',south:'Süden & Colombo'},
+};
+
+function getTranslatedDay(d) {
+  const lang = currentLang;
+  if (lang === 'en') return d;
+  const tr = daysTranslations[lang] && daysTranslations[lang][d.id];
+  if (!tr) return d;
+  const translated = {...d};
+  translated.title = tr.title || d.title;
+  translated.sub = tr.sub || d.sub;
+  translated.km = tr.km || d.km;
+  translated.imgCaption = tr.imgCaption || d.imgCaption;
+  translated.hotelName = tr.hotelName || d.hotelName;
+  translated.hotelPrice = tr.hotelPrice !== undefined ? tr.hotelPrice : d.hotelPrice;
+  translated.hotelNote = tr.hotelNote || d.hotelNote;
+  translated.tip = tr.tip || d.tip;
+  if (tr.places) {
+    translated.places = d.places.map((p, i) => {
+      const tp = tr.places[i];
+      if (!tp) return p;
+      return {...p, name: tp.name || p.name, desc: tp.desc || p.desc, time: tp.time || p.time};
+    });
+  }
+  if (tr.food) {
+    translated.food = d.food.map((f, i) => {
+      const tf = tr.food[i];
+      if (!tf) return f;
+      return {...f, dish: tf.dish || f.dish, place: tf.place || f.place};
+    });
+  }
+  return translated;
+}
+
+function getTranslatedDest(d) {
+  const lang = currentLang;
+  if (lang === 'en') return d;
+  const tr = destTranslations[lang] && destTranslations[lang][d.id];
+  if (!tr) return d;
+  return {...d, tip: tr.tip || d.tip};
+}
+
+
 const regionNames={north:'North Sri Lanka',cultural:'Cultural Triangle',hill:'Hill Country',south:'South & Colombo'};
 const regionColors={north:'#1D9E75',cultural:'#185FA5',hill:'#639922',south:'#B07517'};
 
@@ -965,6 +1622,7 @@ function openHotelModal(d){
   document.getElementById('modalAgodaBtn').href = d.hotelAgoda;
   document.getElementById('modalMapsBtn').href = d.hotelMaps;
   document.getElementById('hotelModal').classList.add('show');
+  document.body.classList.add('modal-open');
 }
 
 function closeModal(e){
@@ -972,6 +1630,7 @@ function closeModal(e){
 }
 function closeModalDirect(){
   document.getElementById('hotelModal').classList.remove('show');
+  document.body.classList.remove('modal-open');
 }
 
 function filterDays(region,btn){
@@ -987,13 +1646,14 @@ function renderDays(filter='all'){
   container.innerHTML='';
   const filtered=filter==='all'?days:days.filter(d=>d.region===filter);
   let lastRegion=null;
-  filtered.forEach((d,i)=>{
+  filtered.forEach((origD,i)=>{
+    const d = getTranslatedDay(origD);
     if(filter==='all' && d.region!==lastRegion){
       lastRegion=d.region;
       const label=document.createElement('div');
       label.className='region-label';
       label.style.color=regionColors[d.region]||'var(--muted)';
-      label.textContent=regionNames[d.region]||d.region;
+      label.textContent=(regionNamesTranslated[currentLang]||regionNamesTranslated.en)[d.region]||d.region;
       container.appendChild(label);
     }
     const card=document.createElement('div');
@@ -1030,7 +1690,7 @@ function renderDays(filter='all'){
           </div>
 
           <div class="sec">${t.hotelTitle}</div>
-          <div class="hotel-card" onclick="openHotelModal(days.find(x=>x.id===${d.id}))">
+          <div class="hotel-card" onclick="openHotelModal(getTranslatedDay(days.find(x=>x.id===${d.id})))">
             <div class="hotel-img-row">
               <img src="${d.hotelImg}" alt="${d.hotelName}" loading="lazy"/>
               <div class="hotel-img-badge">${t.clickBook}</div>
