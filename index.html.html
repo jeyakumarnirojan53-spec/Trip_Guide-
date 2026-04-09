@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Lanka 14-Day Road Trip</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1D9E75;--green-dark:#0F6E56;--green-light:#E1F5EE;
+  --amber:#BA7517;--amber-light:#FAEEDA;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --purple:#534AB7;--purple-light:#EEEDFE;
+  --bg:#FAFAF8;--card:#FFFFFF;--text:#1a1a18;--muted:#6b6b66;
+  --border:rgba(0,0,0,0.08);--radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.hero{position:relative;height:480px;overflow:hidden;display:flex;align-items:flex-end}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,30,20,.85) 0%,rgba(5,30,20,.3) 60%,transparent 100%)}
+.hero-content{position:relative;z-index:2;padding:2.5rem;width:100%}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#9FE1CB;margin-bottom:10px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,52px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.75);line-height:1.6;max-width:500px}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)}
+
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);background:var(--green-dark);border-bottom:2px solid var(--green)}
+.stat-item{padding:18px 16px;text-align:center;border-right:1px solid rgba(255,255,255,.12)}
+.stat-item:last-child{border-right:none}
+.stat-val{font-size:22px;font-weight:500;color:#fff;font-family:'Playfair Display',serif}
+.stat-lbl{font-size:11px;color:#9FE1CB;margin-top:2px;letter-spacing:.04em}
+
+.main{max-width:820px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+.filter-bar{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.filter-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 16px;border-radius:24px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.filter-btn .dot-sm{width:6px;height:6px;border-radius:50%}
+.filter-btn:hover{border-color:var(--green);color:var(--green)}
+.filter-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:box-shadow .2s}
+.day-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.day-header{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;transition:background .15s}
+.day-header:hover{background:#fafaf7}
+.day-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;font-family:'Playfair Display',serif}
+.day-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.3}
+.day-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.day-km{font-size:11px;color:var(--muted);background:#f4f4f0;border-radius:8px;padding:4px 9px;white-space:nowrap}
+.chevron{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);transition:transform .25s,background .15s;flex-shrink:0}
+.chevron.open{transform:rotate(180deg);background:var(--green-light);border-color:var(--green);color:var(--green)}
+
+.day-body{display:none;border-top:1px solid var(--border)}
+.day-body.open{display:block}
+
+.card-img-wrap{width:100%;height:200px;overflow:hidden;position:relative}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.day-card:hover .card-img-wrap img{transform:scale(1.03)}
+.card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 60%);display:flex;align-items:flex-end;padding:14px 16px}
+.card-img-overlay span{font-size:12px;color:rgba(255,255,255,.9);background:rgba(0,0,0,.35);padding:3px 9px;border-radius:10px;backdrop-filter:blur(4px)}
+
+.day-inner{padding:18px}
+.sec{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:16px 0 8px}
+.sec:first-child{margin-top:0}
+
+.places{display:flex;flex-direction:column;gap:7px}
+.place{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:#f9f9f6;border-radius:12px;border:1px solid var(--border)}
+.place-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.place-name{font-size:13px;font-weight:500;color:var(--text)}
+.place-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.place-time{font-size:11px;color:var(--green-dark);margin-top:3px;font-weight:500}
+.map-link{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:10px;color:var(--blue);text-decoration:none;white-space:nowrap;flex-shrink:0;background:#fff;transition:all .15s;align-self:flex-start}
+.map-link:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* ===== HOTEL CARD - KEY FEATURE ===== */
+.hotel-card{border-radius:14px;overflow:hidden;border:1px solid rgba(24,95,165,.2);margin-top:4px;cursor:pointer;transition:box-shadow .2s}
+.hotel-card:hover{box-shadow:0 6px 24px rgba(24,95,165,.15)}
+.hotel-img-row{position:relative;height:160px;overflow:hidden}
+.hotel-img-row img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.hotel-card:hover .hotel-img-row img{transform:scale(1.05)}
+.hotel-img-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:500;padding:3px 9px;border-radius:8px;backdrop-filter:blur(4px);letter-spacing:.04em;text-transform:uppercase}
+.hotel-info-row{background:var(--blue-light);padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.hotel-name-big{font-size:13px;font-weight:500;color:#0C447C;line-height:1.3}
+.hotel-price-tag{font-size:12px;color:var(--blue);margin-top:2px}
+.hotel-note-small{font-size:11px;color:var(--muted);margin-top:3px}
+.hotel-btn-col{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.hbtn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:5px 11px;border-radius:8px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s}
+.hbtn-book{background:var(--blue);color:#fff}
+.hbtn-book:hover{background:#0C447C}
+.hbtn-maps{background:#fff;color:var(--blue);border:1px solid rgba(24,95,165,.3)}
+.hbtn-maps:hover{background:var(--blue);color:#fff}
+
+.food-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.food-card{padding:10px 12px;background:#f9f9f6;border-radius:10px;border:1px solid var(--border)}
+.food-meal{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.food-dish{font-size:12px;color:var(--text);margin-top:3px;line-height:1.4}
+.food-place{font-size:11px;color:var(--green-dark);margin-top:3px}
+
+.tip-box{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--amber-light);border-radius:12px;border:1px solid rgba(186,117,23,.2);font-size:12px;color:#633806;line-height:1.55}
+.tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.route-bar{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rline{flex:1;height:1px;background:var(--border)}
+
+.region-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;padding:14px 0 8px;display:flex;align-items:center;gap:8px}
+.region-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Hotel modal overlay */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;overflow:hidden;position:relative}
+.modal-img{width:100%;height:220px;object-fit:cover}
+.modal-body{padding:20px 22px 22px}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.modal-price{font-size:14px;font-weight:500;color:var(--blue);background:var(--blue-light);display:inline-block;padding:4px 12px;border-radius:8px;margin-bottom:12px}
+.modal-note{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:18px;padding:10px 12px;background:#f9f9f6;border-radius:8px;border-left:3px solid var(--amber);border-radius:0 8px 8px 0}
+.modal-btns{display:flex;gap:8px;flex-wrap:wrap}
+.modal-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:9px 18px;border-radius:10px;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s}
+.modal-btn-primary{background:var(--green);color:#fff}
+.modal-btn-primary:hover{background:var(--green-dark)}
+.modal-btn-secondary{background:#f4f4f0;color:var(--text)}
+.modal-btn-secondary:hover{background:#e8e8e0}
+.modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-close:hover{background:rgba(0,0,0,.7)}
+
+@media(max-width:560px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .food-grid{grid-template-columns:1fr 1fr}
+  .hero{height:380px}
+  .day-km{display:none}
+  .hotel-btn-col{flex-direction:row}
+}
+
+/* ===== LANGUAGE SELECTOR ===== */
+.lang-bar{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:10px 20px;background:#111;border-bottom:1px solid rgba(255,255,255,.08)}
+.lang-label{font-size:11px;color:#888;letter-spacing:.08em;text-transform:uppercase}
+.lang-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,.18);background:transparent;color:#aaa;cursor:pointer;transition:all .2s}
+.lang-btn:hover{border-color:#1D9E75;color:#1D9E75}
+.lang-btn.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+
+/* ===== DESTINATION SELECTOR ===== */
+.dest-section{background:linear-gradient(135deg,#0a1628 0%,#0d1f3c 100%);padding:28px 20px 32px}
+.dest-section-title{text-align:center;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#9FE1CB;margin-bottom:18px}
+.dest-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:760px;margin:0 auto}
+.dest-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:30px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#ddd;font-size:13px;font-weight:500;cursor:pointer;transition:all .22s;animation:fadeSlideUp .4s ease both}
+.dest-chip:hover{border-color:var(--green);color:#fff;background:rgba(29,158,117,.18);transform:translateY(-2px);box-shadow:0 6px 20px rgba(29,158,117,.2)}
+.dest-chip.active{border-color:var(--green);background:var(--green);color:#fff}
+.dest-chip-icon{font-size:16px}
+.dest-chip-day{font-size:10px;color:#9FE1CB;margin-left:2px;opacity:.8}
+
+/* ===== TRAVEL MODAL ===== */
+.tmodal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.tmodal-bg.show{display:flex}
+.tmodal{background:#0d1f3c;border:1px solid rgba(255,255,255,.12);border-radius:22px;width:100%;max-width:540px;overflow:hidden;position:relative;animation:modalPop .3s ease}
+@keyframes modalPop{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.tmodal-img{position:relative;height:210px;overflow:hidden}
+.tmodal-img img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.tmodal-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,15,40,.92) 0%,transparent 55%)}
+.tmodal-img-text{position:absolute;bottom:16px;left:18px;z-index:2}
+.tmodal-dest-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#fff;line-height:1.1}
+.tmodal-dest-day{font-size:12px;color:#9FE1CB;margin-top:3px}
+.tmodal-close{position:absolute;top:12px;right:12px;z-index:3;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:background .15s}
+.tmodal-close:hover{background:rgba(0,0,0,.8)}
+.tmodal-body{padding:20px 22px 24px}
+.tmodal-transport-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.topt{padding:14px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);transition:background .2s}
+.topt:hover{background:rgba(29,158,117,.12)}
+.topt-label{font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#9FE1CB;margin-bottom:5px}
+.topt-icon{font-size:20px;margin-bottom:5px;display:block}
+.topt-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
+.topt-time{font-size:12px;font-weight:500;display:inline-block;padding:2px 9px;border-radius:6px}
+.topt-note{font-size:11px;color:#8899bb;margin-top:5px;line-height:1.4}
+.tmodal-tip{display:flex;gap:9px;align-items:flex-start;padding:11px 13px;background:rgba(186,117,23,.12);border-radius:11px;border:1px solid rgba(186,117,23,.25);font-size:12px;color:#f5c97a;line-height:1.55;margin-top:2px}
+
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:560px){
+  .tmodal-transport-grid{grid-template-columns:1fr 1fr}
+  .dest-section{padding:20px 14px 24px}
+  .lang-bar{flex-wrap:wrap;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE SELECTOR -->
+<div class="lang-bar">
+  <span class="lang-label">🌐</span>
+  <button class="lang-btn active" onclick="setLang('en',this)">English</button>
+  <button class="lang-btn" onclick="setLang('fr',this)">Français</button>
+  <button class="lang-btn" onclick="setLang('de',this)">Deutsch</button>
+</div>
+
+<div class="hero">
+  <img class="hero-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80" alt="Sri Lanka">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Complete travel guide</div>
+    <h1>Sri Lanka<br>14-Day Road Trip</h1>
+    <p class="hero-sub">Jaffna → Cultural Triangle → Hill Country → South Coast → Colombo</p>
+    <div class="hero-badges">
+      <span class="badge">14 days</span>
+      <span class="badge">~1,450 km</span>
+      <span class="badge">8 regions</span>
+      <span class="badge">30+ attractions</span>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-val">14</div><div class="stat-lbl">Days</div></div>
+  <div class="stat-item"><div class="stat-val">~1,450</div><div class="stat-lbl">Total km</div></div>
+  <div class="stat-item"><div class="stat-val">8</div><div class="stat-lbl">Regions</div></div>
+  <div class="stat-item"><div class="stat-val">30+</div><div class="stat-lbl">Attractions</div></div>
+</div>
+
+<!-- DESTINATION SELECTOR -->
+<div class="dest-section" id="destSection">
+  <div class="dest-section-title" id="destSectionTitle">🗺️ Select a Destination — See How to Get There</div>
+  <div class="dest-grid" id="destGrid"><!-- filled by JS --></div>
+</div>
+
+<!-- Travel Details Modal -->
+<div class="tmodal-bg" id="travelModal" onclick="if(event.target===this)closeTravelModal()">
+  <div class="tmodal">
+    <button class="tmodal-close" onclick="closeTravelModal()">✕</button>
+    <div class="tmodal-img">
+      <img id="tmodalImg" src="" alt="">
+      <div class="tmodal-img-text">
+        <div class="tmodal-dest-name" id="tmodalName"></div>
+        <div class="tmodal-dest-day" id="tmodalDay"></div>
+      </div>
+    </div>
+    <div class="tmodal-body">
+      <div class="tmodal-transport-grid" id="tmodalTransport"></div>
+      <div class="tmodal-tip" id="tmodalTip"></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="filter-bar" id="filterNav"></div>
+  <div id="daysContainer"></div>
+</div>
+
+<!-- Hotel Modal -->
+<div class="modal-bg" id="hotelModal" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <img id="modalImg" src="" alt="" class="modal-img">
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-sub" id="modalSub"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-note" id="modalNote"></div>
+      <div class="modal-btns">
+        <a id="modalBookBtn" href="#" target="_blank" class="modal-btn modal-btn-primary">🏨 Book on Booking.com ↗</a>
+        <a id="modalAgodaBtn" href="#" target="_blank" class="modal-btn modal-btn-secondary">Agoda ↗</a>
+        <a id="modalMapsBtn" href="#" target="_blank" class="modal-btn modal-btn-secondary">📍 Google Maps ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:30px 20px;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#8892b0;font-size:14px;border-top:1px solid rgba(255,255,255,.1)">
+  <p style="margin:0 0 8px">© Copyright <a href="https://jeyakumarnirojan53-spec.github.io/" target="_blank" style="color:#ccd6f6;text-decoration:none;border-bottom:1px solid #64ffda">Jk Nirojan</a> All Rights Reserved</p>
+  <p style="margin:0">Designed by <span style="color:#64ffda;font-weight:600">JKR Creations</span></p>
+</footer>
+
+<script>
+// ===== TRANSLATIONS =====
+const T = {
+  en: {
+    bestOption:'Best Option', bus:'Bus', train:'Train', tukTuk:'Tuk-Tuk',
+    privateCar:'Private Car/Hire', noDirect:'No Direct Train', notIdeal:'Not Ideal',
+    bicycleHire:'Bicycle Hire', inCity:'In Anuradhapura',
+    busRoute:'Jaffna → Anuradhapura', tukTukCity:'Around the City',
+    travelTo:'How to get there', days:'Days', totalKm:'Total km',
+    regions:'Regions', attractions:'Attractions',
+    allDays:'All 14 Days', north:'North', cultural:'Cultural Triangle',
+    hill:'Hill Country', south:'South Coast',
+    placesTitle:'Places & Attractions', hotelTitle:'Hotel & Accommodation',
+    foodTitle:'Food & Restaurants', tipTitle:'Insider Tip',
+    clickBook:'Click to book', mapsLink:'Maps ↗',
+    bookBtn:'Booking.com ↗', agodaBtn:'Agoda ↗', mapsBtn:'📍 Google Maps ↗',
+    breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner',
+    heroEyebrow:'Complete travel guide', heroTitle:'Sri Lanka\n14-Day Road Trip',
+    heroSub:'Jaffna → Cultural Triangle → Hill Country → South Coast → Colombo',
+    heroBadge1:'14 days', heroBadge2:'~1,450 km', heroBadge3:'8 regions', heroBadge4:'30+ attractions',
+  },
+  fr: {
+    bestOption:'Meilleure Option', bus:'Bus', train:'Train', tukTuk:'Tuk-Tuk',
+    privateCar:'Voiture privée', noDirect:'Pas de train direct', notIdeal:'Non idéal',
+    bicycleHire:'Location vélo', inCity:'À Anuradhapura',
+    busRoute:'Jaffna → Anuradhapura', tukTukCity:'En ville',
+    travelTo:'Comment y aller', days:'Jours', totalKm:'km total',
+    regions:'Régions', attractions:'Attractions',
+    allDays:'Les 14 jours', north:'Nord', cultural:'Triangle culturel',
+    hill:'Pays des collines', south:'Côte sud',
+    placesTitle:'Lieux & Attractions', hotelTitle:'Hôtel & Hébergement',
+    foodTitle:'Nourriture & Restaurants', tipTitle:'Conseil insider',
+    clickBook:'Cliquer pour réserver', mapsLink:'Carte ↗',
+    bookBtn:'Booking.com ↗', agodaBtn:'Agoda ↗', mapsBtn:'📍 Google Maps ↗',
+    breakfast:'Petit-déj.', lunch:'Déjeuner', dinner:'Dîner',
+    heroEyebrow:'Guide de voyage complet', heroTitle:'Sri Lanka\nRoad Trip 14 Jours',
+    heroSub:'Jaffna → Triangle culturel → Pays des collines → Côte sud → Colombo',
+    heroBadge1:'14 jours', heroBadge2:'~1 450 km', heroBadge3:'8 régions', heroBadge4:'30+ attractions',
+  },
+  de: {
+    bestOption:'Beste Option', bus:'Bus', train:'Zug', tukTuk:'Tuk-Tuk',
+    privateCar:'Privatauto/Mietwagen', noDirect:'Kein Direktzug', notIdeal:'Nicht ideal',
+    bicycleHire:'Fahrradverleih', inCity:'In Anuradhapura',
+    busRoute:'Jaffna → Anuradhapura', tukTukCity:'In der Stadt',
+    travelTo:'Wie man hinkommt', days:'Tage', totalKm:'Gesamt km',
+    regions:'Regionen', attractions:'Sehenswürdigkeiten',
+    allDays:'Alle 14 Tage', north:'Norden', cultural:'Kulturelles Dreieck',
+    hill:'Hügelland', south:'Südküste',
+    placesTitle:'Orte & Sehenswürdigkeiten', hotelTitle:'Hotel & Unterkunft',
+    foodTitle:'Essen & Restaurants', tipTitle:'Insider-Tipp',
+    clickBook:'Zum Buchen klicken', mapsLink:'Karte ↗',
+    bookBtn:'Booking.com ↗', agodaBtn:'Agoda ↗', mapsBtn:'📍 Google Maps ↗',
+    breakfast:'Frühstück', lunch:'Mittagessen', dinner:'Abendessen',
+    heroEyebrow:'Vollständiger Reiseführer', heroTitle:'Sri Lanka\n14-Tage Roadtrip',
+    heroSub:'Jaffna → Kulturelles Dreieck → Hügelland → Südküste → Colombo',
+    heroBadge1:'14 Tage', heroBadge2:'~1.450 km', heroBadge3:'8 Regionen', heroBadge4:'30+ Attraktionen',
+  },
+ 
+};
+
+let currentLang = 'en';
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDestGrid();
+  renderFilterBar();
+  renderDays(currentFilter);
+  applyHeroTranslation();
+}
+
+function applyHeroTranslation() {
+  const t = T[currentLang];
+  const eyebrow = document.querySelector('.hero-eyebrow');
+  if (eyebrow) eyebrow.textContent = t.heroEyebrow;
+  const h1 = document.querySelector('.hero h1');
+  if (h1) h1.innerHTML = t.heroTitle.replace('\n','<br>');
+  const sub = document.querySelector('.hero-sub');
+  if (sub) sub.textContent = t.heroSub;
+  const badges = document.querySelectorAll('.badge');
+  const badgeKeys = ['heroBadge1','heroBadge2','heroBadge3','heroBadge4'];
+  badges.forEach((b,i) => { if(badgeKeys[i]) b.textContent = t[badgeKeys[i]]; });
+  // Stats bar
+  const lbls = document.querySelectorAll('.stat-lbl');
+  const statKeys = ['days','totalKm','regions','attractions'];
+  lbls.forEach((l,i) => { if(statKeys[i]) l.textContent = t[statKeys[i]]; });
+}
+
+// ===== DESTINATION DATA =====
+const destinations = [
+  {
+    id: 'jaffna',
+    name: 'Jaffna',
+    day: 'Day 1–2',
+    icon: '🏯',
+    img: 'https://www.backpackeninazie.nl/wp-content/uploads/2016/07/Jaffna-2.jpg',
+    transport: [
+      { label: 'From Colombo', icon: '🚗', name: 'Private Car/Hire', time: '~6 HRS', timeClass: 'time-green', note: 'Most comfortable, A9 highway' },
+      { label: 'Bus', icon: '🚌', name: 'Colombo → Jaffna', time: '~7–8 HRS', timeClass: 'time-amber', note: 'SLTB express bus, LKR 500–700' },
+      { label: 'Train', icon: '🚂', name: 'Northern Line', time: '~7–8 HRS', timeClass: 'time-amber', note: 'Colombo Fort → Jaffna, book online' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Within Jaffna', time: 'LKR 100–300', timeClass: 'time-blue', note: 'Best for local sightseeing in city' },
+    ],
+    tip: 'Take the Northern Railway — the restored line is a great experience and passes through beautiful flat Tamil heartland scenery.'
+  },
+  {
+    id: 'anuradhapura',
+    name: 'Anuradhapura',
+    day: 'Day 3',
+    icon: '🌳',
+    img: 'https://tse1.mm.bing.net/th/id/OIP.m-15XTKNV09xvEU1JjL9LwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~3.5 HRS', timeClass: 'time-green', note: 'From Jaffna via A9, smooth highway' },
+      { label: 'Bus', icon: '🚌', name: 'Jaffna → Anuradhapura', time: '~4.5 HRS', timeClass: 'time-amber', note: 'Regular SLTB buses, LKR 300–400' },
+      { label: 'Train', icon: '🚂', name: 'No Direct Train', time: 'Not Ideal', timeClass: 'time-red', note: 'Change at Medawachchiya — not convenient' },
+      { label: 'Bicycle', icon: '🚲', name: 'In Anuradhapura', time: 'LKR 500/day', timeClass: 'time-blue', note: 'Best way to explore the ancient city ruins' },
+    ],
+    tip: 'Rent a bicycle inside the ancient city — the ruins are spread over 40 km² and cycling is the ideal way to cover them all.'
+  },
+  {
+    id: 'polonnaruwa',
+    name: 'Polonnaruwa',
+    day: 'Day 4',
+    icon: '🏛',
+    img: 'https://www.shutterstock.com/image-photo/polonnaruwa-kingdom-sri-lanka-parakrama-260nw-1617065179.jpg',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~2 HRS', timeClass: 'time-green', note: 'From Anuradhapura, ~100 km' },
+      { label: 'Bus', icon: '🚌', name: 'Anuradhapura → Polonnaruwa', time: '~2.5 HRS', timeClass: 'time-amber', note: 'Regular buses via Habarana, LKR 200' },
+      { label: 'Train', icon: '🚂', name: 'Limited Service', time: '~3 HRS', timeClass: 'time-amber', note: 'Slow train, not recommended' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Within Ancient City', time: 'LKR 300–500', timeClass: 'time-blue', note: 'Tuk-tuks or bicycle hire inside ruins' },
+    ],
+    tip: 'Rent a bicycle (LKR 500) at the entrance — it\'s the most fun way to zip between Gal Vihara, Rankoth Vihara and the Royal Palace ruins.'
+  },
+  {
+    id: 'sigiriya',
+    name: 'Sigiriya',
+    day: 'Day 5',
+    icon: '🦁',
+    img: 'https://th.bing.com/th/id/R.5cd2d09f967ffcb9be6a484cdf2b3c55?rik=9jM%2bfm0JUhC0zA&pid=ImgRaw&r=0',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~40 MIN', timeClass: 'time-green', note: 'From Habarana/Polonnaruwa, very short drive' },
+      { label: 'Bus', icon: '🚌', name: 'Habarana → Sigiriya', time: '~1 HR', timeClass: 'time-amber', note: 'Local bus, LKR 50–80. Infrequent' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'From Habarana', time: 'LKR 500–800', timeClass: 'time-blue', note: 'Convenient for the 15 km from Habarana' },
+      { label: 'Tour', icon: '🎒', name: 'Day Tour Package', time: 'USD 40–60', timeClass: 'time-amber', note: 'Sigiriya + Dambulla combo tours available' },
+    ],
+    tip: 'Start climbing BEFORE 7 AM — it gets very hot and extremely crowded by 10 AM. Bring 2 litres of water. Entry fee: ~USD 30 foreigners.'
+  },
+  {
+    id: 'kandy',
+    name: 'Kandy',
+    day: 'Day 6',
+    icon: '🦷',
+    img: 'https://3.bp.blogspot.com/_s12VQz4WpVA/TMamWJsIPPI/AAAAAAAAAAQ/IW6Xa9MFBuo/s1600/maligawa01.jpg',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~2.5 HRS', timeClass: 'time-green', note: 'From Sigiriya/Habarana, scenic A9/A1' },
+      { label: 'Bus', icon: '🚌', name: 'Dambulla → Kandy', time: '~2 HRS', timeClass: 'time-amber', note: 'Express buses available, LKR 150–200' },
+      { label: 'Train', icon: '🚂', name: 'Colombo → Kandy', time: '~2.5 HRS', timeClass: 'time-green', note: 'Beautiful hill train, scenic mountain entry' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Within Kandy City', time: 'LKR 150–400', timeClass: 'time-blue', note: 'Hilly city — tuk-tuks are easiest way around' },
+    ],
+    tip: 'Don\'t miss the evening Puja ceremony at the Tooth Temple at 6:30 PM — it\'s a magical cultural experience with drums and chanting.'
+  },
+  {
+    id: 'nuwara-eliya',
+    name: 'Nuwara Eliya',
+    day: 'Day 7–8',
+    icon: '🍵',
+    img: 'https://pohcdn.com/sites/default/files/styles/paragraph__live_banner__lb_image__1880bp/public/live_banner/Nuwara-Eliya.jpg',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~2.5 HRS', timeClass: 'time-green', note: 'From Kandy, very scenic mountain roads' },
+      { label: 'Bus', icon: '🚌', name: 'Kandy → Nuwara Eliya', time: '~3 HRS', timeClass: 'time-amber', note: 'Regular buses, LKR 150–200. Winding roads!' },
+      { label: 'Train', icon: '🚂', name: 'Hill Country Line', time: '~3.5 HRS', timeClass: 'time-amber', note: 'Kandy → Nanu Oya station (4 km from town)' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Nanu Oya → Town', time: 'LKR 300–400', timeClass: 'time-blue', note: 'Tuk-tuk from Nanu Oya station to town' },
+    ],
+    tip: 'It gets COLD at night (10–15°C). Pack a warm layer. The town has a colonial British charm — explore the race course, post office and market street.'
+  },
+  {
+    id: 'ella',
+    name: 'Ella',
+    day: 'Day 9–10',
+    icon: '🌉',
+    img: 'https://i0.wp.com/www.tourbooking.lk/wp-content/uploads/2023/02/Nine-Arch-Bridge.jpg?fit=1920%2C1080&ssl=1',
+    transport: [
+      { label: 'Best — Scenic!', icon: '🚂', name: 'Hill Country Train', time: '~4 HRS', timeClass: 'time-green', note: 'Nuwara Eliya (Nanu Oya) → Ella. World\'s most scenic train!' },
+      { label: 'Private Car', icon: '🚗', name: 'Car/Hire', time: '~2.5 HRS', timeClass: 'time-amber', note: 'Faster but misses the magical train experience' },
+      { label: 'Bus', icon: '🚌', name: 'Nuwara Eliya → Ella', time: '~3.5 HRS', timeClass: 'time-amber', note: 'Via Welimada, winding mountain roads' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Around Ella Town', time: 'LKR 200–500', timeClass: 'time-blue', note: 'Perfect for Nine Arch Bridge & Little Adam\'s Peak' },
+    ],
+    tip: 'BOOK THE TRAIN IN ADVANCE at eticket.railway.gov.lk — 2nd class observation coach is LKR 600 and has the best views through open windows!'
+  },
+  {
+    id: 'yala',
+    name: 'Yala',
+    day: 'Day 11',
+    icon: '🐆',
+    img: 'https://tse2.mm.bing.net/th/id/OIP.UXNn67IMTFAJ6efcIXwLWQHaEr?rs=1&pid=ImgDetMain&o=7&rm=3',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~3.5 HRS', timeClass: 'time-green', note: 'From Ella, ~150 km via Wellawaya' },
+      { label: 'Bus', icon: '🚌', name: 'Ella → Tissamaharama', time: '~3 HRS', timeClass: 'time-amber', note: 'Bus to Tissa, then tuk-tuk to Yala gates' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Tissa → Yala Gate', time: '~30 MIN', timeClass: 'time-blue', note: 'From Tissamaharama town to park entrance' },
+      { label: 'Safari Jeep', icon: '🛻', name: 'Inside Yala Park', time: 'USD 50–80/jeep', timeClass: 'time-amber', note: 'Mandatory jeep safari — book reputable operator' },
+    ],
+    tip: 'Go on the AFTERNOON safari (2:30–7 PM) — leopards are most active at dusk. Yala has the highest leopard density in the world. Book 2 months ahead!'
+  },
+  {
+    id: 'mirissa',
+    name: 'Mirissa',
+    day: 'Day 12',
+    icon: '🐋',
+    img: 'https://static.saltinourhair.com/wp-content/uploads/2017/04/23155035/Things-To-Do-Mirissa-Sri-Lanka-coconut-tree-header.jpg',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~2.5 HRS', timeClass: 'time-green', note: 'From Yala via Hambantota coastal road' },
+      { label: 'Bus', icon: '🚌', name: 'Tissamaharama → Mirissa', time: '~3 HRS', timeClass: 'time-amber', note: 'Via Matara, Southern Expressway section' },
+      { label: 'Train', icon: '🚂', name: 'Coastal Line', time: '~3.5 HRS', timeClass: 'time-amber', note: 'Colombo → Matara passes through coastal towns' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Matara → Mirissa', time: 'LKR 500–700', timeClass: 'time-blue', note: 'Short 12 km ride from Matara station/bus' },
+    ],
+    tip: 'Book whale watching at least 2 days ahead — Raja & the Whales or Ocean Eco Tours are top operators. Blue whales Nov–April season only!'
+  },
+  {
+    id: 'galle',
+    name: 'Galle',
+    day: 'Day 13',
+    icon: '🏰',
+    img: 'https://th.bing.com/th/id/R.833df36aa568b3c2b76c4f3bcf025573?rik=iuEd5nGieF4b3g&pid=ImgRaw&r=0',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~40 MIN', timeClass: 'time-green', note: 'From Mirissa, only ~40 km coastal drive' },
+      { label: 'Bus', icon: '🚌', name: 'Mirissa → Galle', time: '~1 HR', timeClass: 'time-amber', note: 'Regular local buses via Weligama, LKR 80' },
+      { label: 'Train', icon: '🚂', name: 'Coastal Line', time: '~1 HR', timeClass: 'time-amber', note: 'Beautiful ocean views from the coastal train' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Within Galle Fort', time: 'LKR 200–400', timeClass: 'time-blue', note: 'Fort is walkable but tuk-tuks handy nearby' },
+    ],
+    tip: 'Walk the fort ramparts at SUNSET — one of the most beautiful experiences in Sri Lanka. The fort walls face west for perfect golden hour lighting!'
+  },
+  {
+    id: 'colombo',
+    name: 'Colombo',
+    day: 'Day 14',
+    icon: '🏙',
+    img: 'https://www.lovesrilanka.org/wp-content/uploads/2020/09/143850266_s.jpg',
+    transport: [
+      { label: 'Best Option', icon: '🚗', name: 'Private Car/Hire', time: '~2.5 HRS', timeClass: 'time-green', note: 'From Galle via Southern Expressway E01' },
+      { label: 'Bus', icon: '🚌', name: 'Galle → Colombo', time: '~3 HRS', timeClass: 'time-amber', note: 'Express buses on Southern Expressway, LKR 200' },
+      { label: 'Train', icon: '🚂', name: 'Coastal Line', time: '~2.5 HRS', timeClass: 'time-amber', note: 'Galle → Colombo Fort, scenic coastal ride' },
+      { label: 'Tuk-Tuk', icon: '🛺', name: 'Within Colombo', time: 'LKR 200–600', timeClass: 'time-blue', note: 'Use PickMe or Uber app for fair prices in city' },
+    ],
+    tip: 'Book Ministry of Crab at Old Dutch Hospital DAYS IN ADVANCE — it\'s one of Asia\'s 50 Best Restaurants and the perfect grand finale dinner!'
+  },
+];
+
+const timeColors = {
+  'time-green': '#4ade80',
+  'time-amber': '#fbbf24',
+  'time-red':   '#f87171',
+  'time-blue':  '#60a5fa',
+};
+
+function renderDestGrid() {
+  const t = T[currentLang];
+  const grid = document.getElementById('destGrid');
+  const title = document.getElementById('destSectionTitle');
+  if(title) title.textContent = '🗺️ ' + (t.selectDest || 'Select a Destination — See How to Get There');
+  grid.innerHTML = destinations.map((d, i) => `
+    <div class="dest-chip" style="animation-delay:${i*0.05}s" onclick="openTravelModal('${d.id}')">
+      <span class="dest-chip-icon">${d.icon}</span>
+      <span>${d.name}</span>
+      <span class="dest-chip-day">${d.day}</span>
+    </div>
+  `).join('');
+}
+
+function openTravelModal(id) {
+  const d = destinations.find(x => x.id === id);
+  if (!d) return;
+  document.getElementById('tmodalImg').src = d.img;
+  document.getElementById('tmodalImg').alt = d.name;
+  document.getElementById('tmodalName').textContent = d.name;
+  document.getElementById('tmodalDay').textContent = d.day + ' of the journey';
+  document.getElementById('tmodalTransport').innerHTML = d.transport.map(opt => `
+    <div class="topt">
+      <div class="topt-label">${opt.label}</div>
+      <span class="topt-icon">${opt.icon}</span>
+      <div class="topt-name">${opt.name}</div>
+      <span class="topt-time" style="color:${timeColors[opt.timeClass]};background:${timeColors[opt.timeClass]}18">${opt.time}</span>
+      <div class="topt-note">${opt.note}</div>
+    </div>
+  `).join('');
+  document.getElementById('tmodalTip').innerHTML = `<span style="font-size:16px;flex-shrink:0">💡</span><span>${d.tip}</span>`;
+  document.getElementById('travelModal').classList.add('show');
+}
+
+function closeTravelModal() {
+  document.getElementById('travelModal').classList.remove('show');
+}
+
+
+function renderFilterBar() {
+  const t = T[currentLang];
+  const nav = document.getElementById('filterNav');
+  nav.innerHTML = `
+    <button class="filter-btn ${currentFilter==='all'?'active':''}" onclick="filterDays('all',this)">${t.allDays}</button>
+    <button class="filter-btn ${currentFilter==='north'?'active':''}" onclick="filterDays('north',this)"><span class="dot-sm" style="background:#1D9E75"></span>${t.north}</button>
+    <button class="filter-btn ${currentFilter==='cultural'?'active':''}" onclick="filterDays('cultural',this)"><span class="dot-sm" style="background:#185FA5"></span>${t.cultural}</button>
+    <button class="filter-btn ${currentFilter==='hill'?'active':''}" onclick="filterDays('hill',this)"><span class="dot-sm" style="background:#639922"></span>${t.hill}</button>
+    <button class="filter-btn ${currentFilter==='south'?'active':''}" onclick="filterDays('south',this)"><span class="dot-sm" style="background:#B07517"></span>${t.south}</button>
+  `;
+}
+
+let currentFilter = 'all';
+</script>
+
+<script>
+const days = [
+  {
+    id:1,region:'north',color:'#1D9E75',light:'#E1F5EE',
+    title:'Jaffna — Explore Your Hometown',
+    sub:'Jaffna Fort · Nallur Kovil · Casuarina Beach',
+    km:'Local exploration',
+    img:'https://www.backpackeninazie.nl/wp-content/uploads/2016/07/Jaffna-2.jpg',
+    imgCaption:'Nallur Kandaswamy Kovil, Jaffna',
+    places:[
+      {icon:'🏯',name:'Jaffna Fort',desc:'17th-century Dutch fort — walk the ramparts for harbor views',time:'8:00–10:00 AM',map:'https://maps.google.com/?q=Jaffna+Fort,Sri+Lanka'},
+      {icon:'🛕',name:'Nallur Kandaswamy Kovil',desc:'Sacred Hindu temple, one of the most important in Sri Lanka',time:'10:30–12:00 PM',map:'https://maps.google.com/?q=Nallur+Kandaswamy+Kovil,Jaffna'},
+      {icon:'🌊',name:'Casuarina Beach',desc:'Beautiful northern beach, perfect sunset spot',time:'4:00–6:00 PM',map:'https://maps.google.com/?q=Casuarina+Beach,Jaffna'},
+      {icon:'🛍',name:'Jaffna Municipal Market',desc:'Bustling local market — try fresh palmyrah products & snacks',time:'2:00–3:30 PM',map:'https://maps.google.com/?q=Jaffna+Market,Sri+Lanka'},
+    ],
+    hotelName:'Thinnai Resort or Morgan Rest House',
+    hotelPrice:'~LKR 6,000–12,000/night (≈€17–35)',
+    hotelNote:'Book in advance — limited good options in Jaffna',
+    hotelImg:'https://thethinnai.com/wp-content/uploads/2024/09/The-Walkway-between-Blocks-A-and-C-from-the-Swimming-Pool-at-Night.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Thinnai+Resort+Jaffna+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Jaffna&searchText=Thinnai+Resort',
+    hotelMaps:'https://maps.google.com/?q=Thinnai+Resort,Jaffna,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Idiyappam & dhal curry',place:'Local kadai near your home'},
+      {meal:'Lunch',dish:'Jaffna crab curry + rice',place:'Rio Ice Cream & Restaurant'},
+      {meal:'Dinner',dish:'Kottu roti & string hoppers',place:'Cosy Restaurant, Jaffna'},
+    ],
+    tip:'Show your brother the real Jaffna — take him to Nainativu island if time allows (30 min ferry from KKD jetty). Best done on Day 1 or 2.',
+  },
+  {
+    id:2,region:'north',color:'#1D9E75',light:'#E1F5EE',
+    title:'Nainativu Island + Mannar Drive',
+    sub:"Nagadeepa Temple · Adam's Bridge · Mannar Fort",
+    km:'~130 km drive day total',
+    img:'https://www.lasociedadgeografica.com/blog/uploads/2020/06/costa-de-jaffna-en-sri-lanka.jpg',
+    imgCaption:'Northern Sri Lanka coastline',
+    places:[
+      {icon:'⛵',name:'Nainativu Island (Nagadeepa)',desc:'Ferry from KKD Jetty — sacred Buddhist & Hindu temples on the island',time:'7:00–11:00 AM',map:'https://maps.google.com/?q=Nainativu,Sri+Lanka'},
+      {icon:'🦜',name:'Mannar Island',desc:'Drive to Mannar — see the famous Baobab tree (300+ years old)',time:'1:00–3:00 PM',map:'https://maps.google.com/?q=Mannar+Island,Sri+Lanka'},
+      {icon:'🏰',name:'Mannar Fort',desc:'Portuguese fort right on the coast — stunning ocean views',time:'3:00–5:00 PM',map:'https://maps.google.com/?q=Mannar+Fort,Sri+Lanka'},
+    ],
+    hotelName:'Palmyrah House Mannar or Baobab Rest',
+    hotelPrice:'~LKR 8,000–15,000/night',
+    hotelNote:'Mannar has limited hotels — Jaffna is safer bet for accommodation',
+    hotelImg:'https://www.srilankaecotourism.lk/accomadation_img/15197184568.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Palmyrah+House+Mannar+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Mannar&searchText=Palmyrah+House',
+    hotelMaps:'https://maps.google.com/?q=Palmyrah+House,Mannar,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Pol sambol & roti',place:'Home or local hotel'},
+      {meal:'Lunch',dish:'Fresh fish & rice (Mannar style)',place:'Local restaurant in Mannar'},
+      {meal:'Dinner',dish:'Mutton curry & hoppers',place:'Back in Jaffna or Mannar guesthouse'},
+    ],
+    tip:'Ferry to Nainativu runs ~every 30 mins. Cost: ~LKR 80–100. Dress modestly (no shorts) for temple entry.',
+  },
+  {
+    id:3,region:'cultural',color:'#185FA5',light:'#E6F1FB',
+    title:'Jaffna → Anuradhapura',
+    sub:'Ancient Sacred City · Ruwanwelisaya · Bodhi Tree',
+    km:'~200 km · ~3.5 hrs drive',
+    img:'https://tse1.mm.bing.net/th/id/OIP.m-15XTKNV09xvEU1JjL9LwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
+    imgCaption:'Ruwanwelisaya Stupa, Anuradhapura',
+    places:[
+      {icon:'🌳',name:'Sri Maha Bodhi',desc:'The oldest documented tree in the world — sacred fig tree (over 2,200 years)',time:'9:00–10:30 AM',map:'https://maps.google.com/?q=Sri+Maha+Bodhi,Anuradhapura'},
+      {icon:'⛪',name:'Ruwanwelisaya Stupa',desc:"Massive white dome stupa — one of the world's largest",time:'11:00 AM–12:30 PM',map:'https://maps.google.com/?q=Ruwanwelisaya,Anuradhapura'},
+      {icon:'🏛',name:'Jetavanaramaya',desc:'Ruins of a massive ancient stupa — once the 3rd tallest structure on Earth',time:'1:30–3:00 PM',map:'https://maps.google.com/?q=Jetavanaramaya,Anuradhapura'},
+    ],
+    hotelName:'Ulagalla Resort or Palm Garden Village Hotel',
+    hotelPrice:'~LKR 12,000–25,000/night',
+    hotelNote:'Palm Garden Village is excellent value with pool',
+    hotelImg:'https://d1bv4heaa2n05k.cloudfront.net/posts/D2NuSxGJ2z9ZCwMS3/1472808346961-sl-nl-ulagalla-01.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Palm+Garden+Village+Hotel+Anuradhapura',
+    hotelAgoda:'https://www.agoda.com/search?city=Anuradhapura&searchText=Palm+Garden+Village',
+    hotelMaps:'https://maps.google.com/?q=Palm+Garden+Village+Hotel,Anuradhapura',
+    food:[
+      {meal:'Breakfast',dish:'Egg hoppers & kiri hodi',place:'Hotel or roadside stop en route'},
+      {meal:'Lunch',dish:'Rice & curry (12 curries on a banana leaf)',place:'Shalini Restaurant, Anuradhapura'},
+      {meal:'Dinner',dish:'Dhal curry, papadum, coconut sambol',place:'Hotel restaurant'},
+    ],
+    tip:'Rent a bicycle inside the ancient city — best way to cover the ruins. Bring a sarong for temple entry. No shoes inside temples.',
+  },
+  {
+    id:4,region:'cultural',color:'#185FA5',light:'#E6F1FB',
+    title:'Anuradhapura → Polonnaruwa',
+    sub:'Medieval Ruins · Gal Vihara · Parakrama Samudra',
+    km:'~100 km · ~2 hrs drive',
+    img:'https://www.shutterstock.com/image-photo/polonnaruwa-kingdom-sri-lanka-parakrama-260nw-1617065179.jpg',
+    imgCaption:'Gal Vihara Buddha, Polonnaruwa',
+    places:[
+      {icon:'🗿',name:'Gal Vihara Rock Temple',desc:'Giant Buddha statues carved directly into granite — breathtaking craftsmanship',time:'8:30–10:00 AM',map:'https://maps.google.com/?q=Gal+Vihara,Polonnaruwa'},
+      {icon:'🏛',name:'Polonnaruwa Ancient City',desc:'UNESCO ruins — Vatadage, Rankoth Vihara, Royal Palace complex',time:'10:00 AM–1:00 PM',map:'https://maps.google.com/?q=Polonnaruwa+Ancient+City,Sri+Lanka'},
+      {icon:'💧',name:'Parakrama Samudra',desc:'Massive ancient man-made lake — beautiful at sunset',time:'5:00–6:30 PM',map:'https://maps.google.com/?q=Parakrama+Samudra,Polonnaruwa'},
+    ],
+    hotelName:'Deer Park Hotel Habarana or Hotel Sudu Araliya',
+    hotelPrice:'~LKR 10,000–20,000/night',
+    hotelNote:'Habarana is a great central base for the cultural triangle',
+    hotelImg:'https://a414c059ab.clvaw-cdnwnd.com/2e6575f56a8b33a590f55c34ab9f84dc/200000048-d7f36d7f37/51356323_2312157358818527_1507755532050497536_n.jpg?ph=a414c059ab',
+    hotelBook:'https://www.booking.com/search.html?ss=Deer+Park+Hotel+Habarana+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Habarana&searchText=Deer+Park+Hotel',
+    hotelMaps:'https://maps.google.com/?q=Deer+Park+Hotel,Habarana,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'String hoppers & coconut milk',place:'Hotel breakfast'},
+      {meal:'Lunch',dish:'Rice & 7 curries — authentic Sri Lankan',place:'Sathosa Restaurant, Polonnaruwa'},
+      {meal:'Dinner',dish:'Grilled fish & vegetables',place:'Deer Park Hotel restaurant'},
+    ],
+    tip:'Rent a bicycle (LKR 500) at the entrance to cover the ancient city efficiently. Entry ticket for foreigners: ~USD 25.',
+  },
+  {
+    id:5,region:'cultural',color:'#185FA5',light:'#E6F1FB',
+    title:'Sigiriya Rock Fortress + Dambulla',
+    sub:'Lion Rock · Fresco Paintings · Cave Temples',
+    km:'~40 km · short drive',
+    img:'https://th.bing.com/th/id/R.5cd2d09f967ffcb9be6a484cdf2b3c55?rik=9jM%2bfm0JUhC0zA&pid=ImgRaw&r=0',
+    imgCaption:'Sigiriya Lion Rock fortress',
+    places:[
+      {icon:'🦁',name:'Sigiriya (Lion Rock)',desc:'UNESCO World Heritage — ancient fortress atop a 200m volcanic rock. Climb takes ~1.5 hrs',time:'6:00–10:00 AM (go early!)',map:'https://maps.google.com/?q=Sigiriya,Sri+Lanka'},
+      {icon:'🖼',name:'Dambulla Cave Temple',desc:'5 caves with 153 Buddha statues & ancient murals — UNESCO site',time:'2:00–4:00 PM',map:'https://maps.google.com/?q=Dambulla+Cave+Temple,Sri+Lanka'},
+      {icon:'🌿',name:'Sigiriya Village Walk',desc:'Optional village cycling tour through paddy fields & jungle',time:'4:30–6:00 PM',map:'https://maps.google.com/?q=Sigiriya+Village,Sri+Lanka'},
+    ],
+    hotelName:'Jetwing Vil Uyana or Cinnamon Lodge Habarana',
+    hotelPrice:'~LKR 25,000–60,000/night',
+    hotelNote:'Jetwing Vil Uyana is world-class — book well ahead',
+    hotelImg:'https://www.luxurylifestylemag.co.uk/wp-content/uploads/2022/05/JVU_Exterior6_4_5315.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Jetwing+Vil+Uyana+Sigiriya',
+    hotelAgoda:'https://www.agoda.com/search?city=Sigiriya&searchText=Jetwing+Vil+Uyana',
+    hotelMaps:'https://maps.google.com/?q=Jetwing+Vil+Uyana,Sigiriya,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Quick hoppers before the climb',place:'Hotel or Sigiriya village café'},
+      {meal:'Lunch',dish:'Rice & curry + fresh king coconut',place:'Dambulla town restaurants'},
+      {meal:'Dinner',dish:'BBQ buffet Sri Lankan style',place:'Hotel restaurant — most do superb buffets'},
+    ],
+    tip:'START SIGIRIYA BY 6:30 AM — it gets extremely hot and crowded by 10 AM. Bring 2L of water. Entry: ~USD 30 foreigners.',
+  },
+  {
+    id:6,region:'hill',color:'#639922',light:'#EAF3DE',
+    title:'Sigiriya → Kandy',
+    sub:"Temple of the Tooth · Kandy Lake · Cultural Show",
+    km:'~90 km · ~2.5 hrs drive',
+    img:'https://3.bp.blogspot.com/_s12VQz4WpVA/TMamWJsIPPI/AAAAAAAAAAQ/IW6Xa9MFBuo/s1600/maligawa01.jpg',
+    imgCaption:'Temple of the Tooth, Kandy',
+    places:[
+      {icon:'🦷',name:'Sri Dalada Maligawa (Tooth Temple)',desc:'Most sacred Buddhist site in Sri Lanka. Attend the Puja ceremony at 6:30 AM / 10:00 AM / 6:30 PM',time:'6:30 PM Puja ceremony',map:'https://maps.google.com/?q=Sri+Dalada+Maligawa,Kandy'},
+      {icon:'🌊',name:'Kandy Lake Walk',desc:'Peaceful stroll around the lake — beautiful colonial architecture',time:'4:30–5:30 PM',map:'https://maps.google.com/?q=Kandy+Lake,Sri+Lanka'},
+      {icon:'💃',name:'Kandyan Cultural Dance Show',desc:'Traditional Kandyan dance performance — highly recommended for first-time visitors',time:'7:00–8:30 PM',map:'https://maps.google.com/?q=Kandyan+Cultural+Dance+Show,Kandy'},
+    ],
+    hotelName:"Hotel Suisse or Helga's Folly",
+    hotelPrice:'~LKR 15,000–35,000/night',
+    hotelNote:"Helga's Folly is unique & eccentric — a Kandy icon",
+    hotelImg:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=75',
+    hotelBook:"https://www.booking.com/search.html?ss=Hotel+Suisse+Kandy+Sri+Lanka",
+    hotelAgoda:'https://www.agoda.com/search?city=Kandy&searchText=Hotel+Suisse',
+    hotelMaps:"https://maps.google.com/?q=Hotel+Suisse,Kandy,Sri+Lanka",
+    food:[
+      {meal:'Breakfast',dish:'Pittu & kiri hodi',place:'Hotel or local kadai'},
+      {meal:'Lunch',dish:'Kandy-style rice & curry',place:'Devon Restaurant (famous local spot)'},
+      {meal:'Dinner',dish:'Noodles & short eats after show',place:'Whitehouse Restaurant, Kandy'},
+    ],
+    tip:'Visit the Peradeniya Royal Botanical Gardens (USD 15) in the morning before Kandy — beautiful 147-acre garden with orchids & giant bamboo.',
+  },
+  {
+    id:7,region:'hill',color:'#639922',light:'#EAF3DE',
+    title:"Kandy → Nuwara Eliya (Little England)",
+    sub:'Tea Plantations · Gregory Lake · Victoria Park',
+    km:'~80 km · ~2.5 hrs (scenic mountain roads)',
+    img:'https://pohcdn.com/sites/default/files/styles/paragraph__live_banner__lb_image__1880bp/public/live_banner/Nuwara-Eliya.jpg',
+    imgCaption:'Tea estates, Nuwara Eliya',
+    places:[
+      {icon:'🍵',name:'Tea Factory Tour',desc:'See how Ceylon tea is made — visit a working tea estate',time:'10:00 AM–12:00 PM',map:'https://maps.google.com/?q=Tea+factory+Nuwara+Eliya,Sri+Lanka'},
+      {icon:'🌸',name:'Hakgala Botanical Gardens',desc:'Stunning high-altitude gardens at 1,745m — roses, orchids, ferns',time:'1:00–3:00 PM',map:'https://maps.google.com/?q=Hakgala+Botanical+Gardens,Sri+Lanka'},
+      {icon:'⛵',name:'Gregory Lake',desc:'Beautiful lake — rent a pedal boat or just walk the promenade',time:'4:00–5:30 PM',map:'https://maps.google.com/?q=Gregory+Lake,Nuwara+Eliya'},
+    ],
+    hotelName:'The Grand Hotel or Araliya Green Hills',
+    hotelPrice:'~LKR 18,000–45,000/night',
+    hotelNote:'Grand Hotel is a colonial classic — a must in Nuwara Eliya',
+    hotelImg:'https://ygt-res.cloudinary.com/image/upload/c_fill,h_630,q_80,w_1200/v1614087657/Venues/Araliya%20Green%20Hills%20Hotel/araliya-green-hills-hotel-1.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Grand+Hotel+Nuwara+Eliya+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Nuwara+Eliya&searchText=Grand+Hotel',
+    hotelMaps:'https://maps.google.com/?q=The+Grand+Hotel,Nuwara+Eliya,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'English breakfast ("Little England"!)',place:'Grand Hotel breakfast'},
+      {meal:'Lunch',dish:'Hoppers & kiri hodi after tea tour',place:'Café near tea factory'},
+      {meal:'Dinner',dish:'Beef stew & vegetables (cool mountain air!)',place:'Milano Restaurant, Nuwara Eliya'},
+    ],
+    tip:"It gets COLD in Nuwara Eliya at night (10–15°C). Pack a light jacket. The town has a colonial charm — walk the main street in the evening.",
+  },
+  {
+    id:8,region:'hill',color:'#639922',light:'#EAF3DE',
+    title:"Horton Plains — World's End",
+    sub:"World's End Drop · Baker's Falls · Cloud Forest",
+    km:"~32 km from Nuwara Eliya · 9 km hike",
+    img:'https://tse4.mm.bing.net/th/id/OIP.F6flwUpDvHt2F97VbzsflgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
+    imgCaption:"World's End cliff, Horton Plains",
+    places:[
+      {icon:'🏔',name:"World's End (Horton Plains)",desc:"Dramatic 880m cliff drop with views to the coast on clear days. 9km circular hike total",time:"6:00 AM–12:00 PM (MUST go early!)",map:"https://maps.google.com/?q=World's+End+Horton+Plains,Sri+Lanka"},
+      {icon:'💦',name:"Baker's Falls",desc:'Beautiful waterfall along the Horton Plains trail',time:'On the hike route',map:"https://maps.google.com/?q=Baker's+Falls,Horton+Plains"},
+      {icon:'🏔',name:"Adam's Peak (Sri Pada)",desc:'Sacred 2,243m mountain with holy footprint. 5,500 steps to summit — best climbed at night for sunrise',time:'Start 2:00 AM from Nallathanniya (optional)',map:"https://maps.google.com/?q=Adam's+Peak,Sri+Lanka"},
+    ],
+    hotelName:'Same as Day 7 — The Grand Hotel',
+    hotelPrice:'',
+    hotelNote:'Return to Nuwara Eliya after the hike — rest day afternoon',
+    hotelImg:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600&q=75',
+    hotelBook:'https://www.booking.com/search.html?ss=Grand+Hotel+Nuwara+Eliya+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Nuwara+Eliya&searchText=Grand+Hotel',
+    hotelMaps:'https://maps.google.com/?q=The+Grand+Hotel,Nuwara+Eliya,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Pack sandwiches from hotel — eat in the park',place:'Hotel packed breakfast (arrange night before)'},
+      {meal:'Lunch',dish:'Rice & curry after hike return',place:'Restaurant near Nuwara Eliya'},
+      {meal:'Dinner',dish:'Devilled chicken & fried rice',place:'Milano or Heritance Tea Factory'},
+    ],
+    tip:'Park opens 6 AM — arrive by 6:30 AM. Mist covers the view by 10 AM. Wear good shoes (trail gets muddy). Entry: LKR 3,750 foreigners. Bring raincoat.',
+  },
+  {
+    id:9,region:'hill',color:'#639922',light:'#EAF3DE',
+    title:'Nuwara Eliya → Ella (Scenic Train!)',
+    sub:'Nine Arch Bridge · Ella Rock · Little Adams Peak',
+    km:'~75 km · Train ride is 4 hrs (most scenic in world!)',
+    img:'https://i0.wp.com/www.tourbooking.lk/wp-content/uploads/2023/02/Nine-Arch-Bridge.jpg?fit=1920%2C1080&ssl=1',
+    imgCaption:'Nine Arch Bridge, Ella',
+    places:[
+      {icon:'🚂',name:'Kandy–Ella Train (Nuwara Eliya → Ella)',desc:'Take the famous blue train through tea estates & mountains. Book 2nd class observation coach',time:'Depart ~8:00 AM, arrive Ella ~12:00 PM',map:'https://maps.google.com/?q=Ella+Railway+Station,Sri+Lanka'},
+      {icon:'🌉',name:'Nine Arch Bridge',desc:'Iconic 1921 stone viaduct through jungle — photograph a passing train from the viewpoint',time:'2:00–3:30 PM',map:'https://maps.google.com/?q=Nine+Arch+Bridge,Ella,Sri+Lanka'},
+      {icon:'⛰',name:"Little Adam's Peak",desc:"Easy 1-hour hike with stunning panoramic views of Ella Gap — best at sunset",time:'4:30–6:30 PM',map:"https://maps.google.com/?q=Little+Adam's+Peak,Ella"},
+    ],
+    hotelName:'98 Acres Resort & Spa or Zion View Ella',
+    hotelPrice:'~LKR 20,000–55,000/night',
+    hotelNote:'98 Acres has the most breathtaking views in Ella — worth the splurge',
+    hotelImg:'https://thevendry.com/cdn-cgi/image/height=1920,width=1920,fit=contain,metadata=none/https://s3.us-east-1.amazonaws.com/uploads.thevendry.co/24984/1714665725801__MAD1487-Edit.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=98+Acres+Resort+Ella+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Ella&searchText=98+Acres+Resort',
+    hotelMaps:'https://maps.google.com/?q=98+Acres+Resort,Ella,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Quick hoppers before train',place:'Hotel or Nuwara Eliya town café'},
+      {meal:'Lunch',dish:'Rice box on the train or Ella station food',place:'Platform vendors or Café Chill in Ella'},
+      {meal:'Dinner',dish:'Ella-style rice & curry + passion fruit juice',place:'Dream Café or Matey Hut, Ella'},
+    ],
+    tip:'BOOK TRAIN TICKETS IN ADVANCE at eticket.railway.gov.lk — the Kandy-Ella train is the most famous train ride in the world. 2nd class observation deck: LKR 600.',
+  },
+  {
+    id:10,region:'hill',color:'#639922',light:'#EAF3DE',
+    title:'Ella — Ravana Falls + Adventure Activities',
+    sub:'Ravana Ella · Ella Rock · Rafting · Canyoning · Rainforest',
+    km:'Local Ella area + Kitulgala/Sinharaja day trips',
+    img:'https://www.visitella.com/img/places/ravana-falls/gallery/1/1.png',
+    imgCaption:'Ravana Falls, Ella',
+    places:[
+      {icon:'🧗',name:'Ella Rock Hike',desc:'4–5 hr return hike through tea estates & jungle to the rocky summit — stunning 360° views',time:'6:00–11:00 AM',map:'https://maps.google.com/?q=Ella+Rock+Trailhead,Sri+Lanka'},
+      {icon:'💦',name:'Ravana Ella Falls',desc:'Impressive tiered waterfall near the A23 highway — associated with the Ramayana story',time:'12:00–1:00 PM',map:'https://maps.google.com/?q=Ravana+Ella+Falls,Sri+Lanka'},
+      {icon:'🌊',name:'White Water Rafting (Kelani River)',desc:'Thrilling Grade 3–4 rapids near Kitulgala — 5 km stretch through jungle canyon',time:'Half-day trip (arrange via tour operator)',map:'https://maps.google.com/?q=Kitulgala+White+Water+Rafting,Sri+Lanka'},
+      {icon:'🌳',name:'Sinharaja Rainforest',desc:'UNESCO World Heritage rainforest — endemic birds, rare wildlife & pristine jungle trails',time:'Full day or half-day hike',map:'https://maps.google.com/?q=Sinharaja+Rainforest,Sri+Lanka'},
+    ],
+    hotelName:'Same as Day 9 — 98 Acres Resort',
+    hotelPrice:'',
+    hotelNote:"Two nights in Ella recommended — there's a lot to do",
+    hotelImg:'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/dc/d0/1c/98-acres-resort.jpg?w=1400&h=-1&s=1',
+    hotelBook:'https://www.booking.com/search.html?ss=98+Acres+Resort+Ella+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Ella&searchText=98+Acres+Resort',
+    hotelMaps:'https://maps.google.com/?q=98+Acres+Resort,Ella,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Porridge & fruit before the hike',place:'Hotel breakfast or Cafe Chill'},
+      {meal:'Lunch',dish:'Quick meal after hike — noodles or rice',place:'Restaurant near Ravana Falls or Ella town'},
+      {meal:'Dinner',dish:'Devilled pork & kottu roti',place:'Matey Hut or Café Aroma, Ella'},
+    ],
+    tip:'Start Ella Rock hike BEFORE 6:30 AM — the trail is unmarked, so download Wikiloc trails app offline. Bring 2L water and snacks.',
+  },
+  {
+    id:11,region:'south',color:'#B07517',light:'#FAEEDA',
+    title:'Ella → Yala National Park',
+    sub:'Leopard Safari · Elephants · Wild Coast',
+    km:'~150 km · ~3.5 hrs drive',
+    img:'https://tse2.mm.bing.net/th/id/OIP.UXNn67IMTFAJ6efcIXwLWQHaEr?rs=1&pid=ImgDetMain&o=7&rm=3',
+    imgCaption:'Leopard sighting, Yala National Park',
+    places:[
+      {icon:'🐆',name:'Yala National Park Safari (Block 1)',desc:'Highest leopard density in the world. 4–5 hr jeep safari. Book with reliable operator',time:'2:30–7:00 PM (afternoon safari)',map:'https://maps.google.com/?q=Yala+National+Park,Sri+Lanka'},
+      {icon:'🐘',name:'Elephant & Peacock Sightings',desc:'Elephants, spotted deer, crocodiles, peacocks & water buffalo are common sightings',time:'During safari',map:'https://maps.google.com/?q=Yala+National+Park+Block+1'},
+      {icon:'🌅',name:'Yala Beach',desc:'Wild deserted beach on the park boundary — stunning sunset',time:'After safari / evening',map:'https://maps.google.com/?q=Yala+Beach,Sri+Lanka'},
+    ],
+    hotelName:'Cinnamon Wild Yala or Jetwing Yala',
+    hotelPrice:'~LKR 40,000–80,000/night (lodge style)',
+    hotelNote:'Book Yala lodges 3–6 months ahead — they fill up fast. Mid-range: Chaaya Wild Yala',
+    hotelImg:'https://www.bluelankatours.com/wp-content/uploads/2023/12/Cinnamon-Wild-Yala.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Jetwing+Yala+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Yala&searchText=Jetwing+Yala',
+    hotelMaps:'https://maps.google.com/?q=Jetwing+Yala,Yala,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Hotel breakfast — early before drive',place:'Ella hotel'},
+      {meal:'Lunch',dish:'Rice box in the vehicle to Yala',place:'Pack from Ella or stop en route'},
+      {meal:'Dinner',dish:'BBQ under the stars at lodge',place:'Yala safari lodge restaurant'},
+    ],
+    tip:'Book Yala safari with a reputable company — avoid random touts. Budget: ~USD 50–80 per person for vehicle + park entry. Go in the AFTERNOON when leopards are active.',
+  },
+  {
+    id:12,region:'south',color:'#B07517',light:'#FAEEDA',
+    title:'Yala → Mirissa Beach + Whale Watching',
+    sub:'Blue Whales · Dolphin Watching · Coconut Hill',
+    km:'~120 km · ~2.5 hrs drive',
+    img:'https://static.saltinourhair.com/wp-content/uploads/2017/04/23155035/Things-To-Do-Mirissa-Sri-Lanka-coconut-tree-header.jpg',
+    imgCaption:'Whale watching, Mirissa',
+    places:[
+      {icon:'🐋',name:'Whale Watching (Mirissa)',desc:'Blue whale capital of the world! 3–4 hr boat trip. Best Nov–April',time:'6:00–10:00 AM (depart early)',map:'https://maps.google.com/?q=Mirissa+Harbor,Sri+Lanka'},
+      {icon:'🥥',name:'Coconut Hill Mirissa',desc:'Iconic Instagram viewpoint over Mirissa bay with palm trees',time:'Late afternoon',map:'https://maps.google.com/?q=Coconut+Hill+Mirissa,Sri+Lanka'},
+      {icon:'🏖',name:'Mirissa Beach',desc:'Golden sand beach — swim, relax, watch the sunset with a king coconut',time:'3:00–6:30 PM',map:'https://maps.google.com/?q=Mirissa+Beach,Sri+Lanka'},
+    ],
+    hotelName:'The Frangipani Tree or Paradise Beach Club',
+    hotelPrice:'~LKR 12,000–25,000/night',
+    hotelNote:'Book whale watching in advance — Raja & the Whales is a top operator',
+    hotelImg:'https://www.bluelankatours.com/wp-content/uploads/2023/12/375769570_680727867415975_5451028376736185526_n.jpg',
+    hotelBook:'https://www.booking.com/search.html?ss=Frangipani+Tree+Mirissa+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Mirissa&searchText=Frangipani+Tree',
+    hotelMaps:'https://maps.google.com/?q=The+Frangipani+Tree,Mirissa,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Light breakfast before whale watching',place:'Beach café at harbor'},
+      {meal:'Lunch',dish:'Fresh grilled fish — right on the beach',place:'Mirissa beach shacks — many good ones'},
+      {meal:'Dinner',dish:'Prawn curry & sunset cocktail',place:'Rotti restaurant or Dewmini Roti Shop'},
+    ],
+    tip:"Best whale season: Nov–April. Blue whales are massive — it's unforgettable. Spinner dolphins often swim alongside the boat. Book Raja & the Whales or Ocean Eco Tours.",
+  },
+  {
+    id:13,region:'south',color:'#B07517',light:'#FAEEDA',
+    title:'Mirissa → Galle Dutch Fort',
+    sub:'Colonial Fort · Lighthouse · Boutique Streets',
+    km:'~40 km · ~1 hr drive',
+    img:'https://th.bing.com/th/id/R.833df36aa568b3c2b76c4f3bcf025573?rik=iuEd5nGieF4b3g&pid=ImgRaw&r=0',
+    imgCaption:'Galle Dutch Fort ramparts',
+    places:[
+      {icon:'🏰',name:'Galle Dutch Fort',desc:'UNESCO World Heritage fort — walk the ramparts for ocean views. Dating from 1588',time:'9:00 AM–12:00 PM',map:'https://maps.google.com/?q=Galle+Dutch+Fort,Sri+Lanka'},
+      {icon:'🔦',name:'Galle Lighthouse',desc:'Picturesque lighthouse at the fort tip — great photo spot',time:'Within fort walk',map:'https://maps.google.com/?q=Galle+Lighthouse,Sri+Lanka'},
+      {icon:'🛍',name:'Galle Fort Boutique Streets',desc:'Art galleries, cafés, jewelry shops & craft stores inside the fort walls',time:'12:00–2:00 PM',map:'https://maps.google.com/?q=Galle+Fort+Streets,Sri+Lanka'},
+      {icon:'🌊',name:'Unawatuna Beach',desc:'Beautiful sheltered bay beach, 5 min from Galle — calm water for swimming',time:'3:00–6:00 PM',map:'https://maps.google.com/?q=Unawatuna+Beach,Sri+Lanka'},
+    ],
+    hotelName:'Amangalla or Fort Bazaar (inside the fort)',
+    hotelPrice:'~LKR 35,000–150,000/night',
+    hotelNote:'Mid-range: The Bartizan Galle — great value boutique inside the fort',
+    hotelImg:'https://tse1.mm.bing.net/th/id/OIP.X9SbQJE5nUme7ZVtz9MlIwHaEw?rs=1&pid=ImgDetMain&o=7&rm=3',
+    hotelBook:'https://www.booking.com/search.html?ss=Amangalla+Galle+Fort+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Galle&searchText=Amangalla',
+    hotelMaps:'https://maps.google.com/?q=Amangalla,Galle+Fort,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Sri Lankan breakfast at Mirissa hotel',place:'Hotel or Mirissa café'},
+      {meal:'Lunch',dish:'Lunch at fort café — try the local fish curry',place:"Fort Printers or Pedlar's Inn Café"},
+      {meal:'Dinner',dish:'Fresh seafood with fort views',place:'The Fort Restaurant or Fortaleza inside fort'},
+    ],
+    tip:'Walk the fort ramparts at sunset — one of the most beautiful experiences in Sri Lanka. The fort is fully walkable in 2–3 hours.',
+  },
+  {
+    id:14,region:'south',color:'#534AB7',light:'#EEEDFE',
+    title:'Galle → Colombo — Grand Finale',
+    sub:'Gangaramaya Temple · Colombo Fort · Galle Face Green',
+    km:'~130 km · ~2.5 hrs drive',
+    img:'https://www.lovesrilanka.org/wp-content/uploads/2020/09/143850266_s.jpg',
+    imgCaption:'Galle Face Green, Colombo',
+    places:[
+      {icon:'⛩',name:'Gangaramaya Temple',desc:'Eclectic Buddhist temple with museum full of global artifacts — a Colombo icon',time:'10:00–11:30 AM',map:'https://maps.google.com/?q=Gangaramaya+Temple,Colombo'},
+      {icon:'🌊',name:'Galle Face Green',desc:'Iconic oceanfront promenade — eat local street food as the sun sets over the Indian Ocean',time:'5:00–7:00 PM',map:'https://maps.google.com/?q=Galle+Face+Green,Colombo'},
+      {icon:'🛍',name:'Colombo Fort & Pettah Market',desc:'Old colonial quarter meets chaotic bazaar — great for souvenirs & spices',time:'12:00–2:00 PM',map:'https://maps.google.com/?q=Pettah+Market,Colombo'},
+      {icon:'🏙',name:'Viharamahadevi Park',desc:"Colombo's largest park with the giant golden Buddha — peaceful afternoon stroll",time:'3:00–4:30 PM',map:'https://maps.google.com/?q=Viharamahadevi+Park,Colombo'},
+    ],
+    hotelName:'Cinnamon Grand or Hilton Colombo',
+    hotelPrice:'~LKR 30,000–75,000/night',
+    hotelNote:'Budget option: Colombo City Hotel near Fort station — good location',
+    hotelImg:'https://th.bing.com/th/id/R.11698252cf607a198e1fbc0e04df2253?rik=SXG8%2f%2bcSyy8Q%2fw&pid=ImgRaw&r=0',
+    hotelBook:'https://www.booking.com/search.html?ss=Cinnamon+Grand+Colombo+Sri+Lanka',
+    hotelAgoda:'https://www.agoda.com/search?city=Colombo&searchText=Cinnamon+Grand',
+    hotelMaps:'https://maps.google.com/?q=Cinnamon+Grand,Colombo,Sri+Lanka',
+    food:[
+      {meal:'Breakfast',dish:'Hoppers & dhal — farewell Sri Lankan breakfast',place:'Hotel restaurant or Galle café'},
+      {meal:'Lunch',dish:'Crab curry at Ministry of Crab!',place:'Ministry of Crab, Colombo — MUST DO, book ahead'},
+      {meal:'Dinner',dish:'Sunset drinks & seafood',place:'Galle Face Hotel verandah or Nineties Restaurant'},
+    ],
+    tip:"Ministry of Crab is one of Asia's 50 Best Restaurants — BOOK DAYS IN ADVANCE. It's the perfect celebration dinner to end the trip!",
+  },
+];
+
+const regionNames={north:'North Sri Lanka',cultural:'Cultural Triangle',hill:'Hill Country',south:'South & Colombo'};
+const regionColors={north:'#1D9E75',cultural:'#185FA5',hill:'#639922',south:'#B07517'};
+
+function openHotelModal(d){
+  document.getElementById('modalImg').src = d.hotelImg;
+  document.getElementById('modalImg').alt = d.hotelName;
+  document.getElementById('modalTitle').textContent = d.hotelName;
+  document.getElementById('modalSub').textContent = 'Day '+d.id+' — '+d.title.split('—')[0].split('→').pop().trim();
+  document.getElementById('modalPrice').textContent = d.hotelPrice || 'Same hotel as previous night';
+  document.getElementById('modalNote').textContent = d.hotelNote;
+  document.getElementById('modalBookBtn').href = d.hotelBook;
+  document.getElementById('modalAgodaBtn').href = d.hotelAgoda;
+  document.getElementById('modalMapsBtn').href = d.hotelMaps;
+  document.getElementById('hotelModal').classList.add('show');
+}
+
+function closeModal(e){
+  if(e.target === document.getElementById('hotelModal')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('hotelModal').classList.remove('show');
+}
+
+function filterDays(region,btn){
+  currentFilter = region;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDays(region);
+}
+
+function renderDays(filter='all'){
+  const t = T[currentLang];
+  const container=document.getElementById('daysContainer');
+  container.innerHTML='';
+  const filtered=filter==='all'?days:days.filter(d=>d.region===filter);
+  let lastRegion=null;
+  filtered.forEach((d,i)=>{
+    if(filter==='all' && d.region!==lastRegion){
+      lastRegion=d.region;
+      const label=document.createElement('div');
+      label.className='region-label';
+      label.style.color=regionColors[d.region]||'var(--muted)';
+      label.textContent=regionNames[d.region]||d.region;
+      container.appendChild(label);
+    }
+    const card=document.createElement('div');
+    card.className='day-card';
+    card.innerHTML=`
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-badge" style="background:${d.light};color:${d.color}">D${d.id}</div>
+        <div>
+          <div class="day-title">${d.title}</div>
+          <div class="day-sub">${d.sub}</div>
+        </div>
+        <div class="day-km">${d.km}</div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="day-body">
+        <div class="card-img-wrap">
+          <img src="${d.img}" alt="${d.imgCaption}" loading="lazy"/>
+          <div class="card-img-overlay"><span>${d.imgCaption}</span></div>
+        </div>
+        <div class="day-inner">
+          <div class="sec">${t.placesTitle}</div>
+          <div class="places">
+            ${d.places.map(p=>`
+              <div class="place">
+                <div class="place-icon" style="background:${d.light}">${p.icon}</div>
+                <div style="flex:1">
+                  <div class="place-name">${p.name}</div>
+                  <div class="place-desc">${p.desc}</div>
+                  <div class="place-time">${p.time}</div>
+                </div>
+                <a class="map-link" href="${p.map}" target="_blank">${t.mapsLink}</a>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="sec">${t.hotelTitle}</div>
+          <div class="hotel-card" onclick="openHotelModal(days.find(x=>x.id===${d.id}))">
+            <div class="hotel-img-row">
+              <img src="${d.hotelImg}" alt="${d.hotelName}" loading="lazy"/>
+              <div class="hotel-img-badge">${t.clickBook}</div>
+            </div>
+            <div class="hotel-info-row">
+              <div style="flex:1">
+                <div class="hotel-name-big">${d.hotelName}</div>
+                ${d.hotelPrice?`<div class="hotel-price-tag">${d.hotelPrice}</div>`:''}
+                <div class="hotel-note-small">${d.hotelNote}</div>
+              </div>
+              <div class="hotel-btn-col">
+                <a class="hbtn hbtn-book" href="${d.hotelBook}" target="_blank" onclick="event.stopPropagation()">${t.bookBtn}</a>
+                <a class="hbtn hbtn-maps" href="${d.hotelMaps}" target="_blank" onclick="event.stopPropagation()">📍 Maps ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">${t.foodTitle}</div>
+          <div class="food-grid">
+            ${d.food.map(f=>`
+              <div class="food-card">
+                <div class="food-meal">${f.meal==='Breakfast'?t.breakfast:f.meal==='Lunch'?t.lunch:t.dinner}</div>
+                <div class="food-dish">${f.dish}</div>
+                <div class="food-place">${f.place}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="sec">${t.tipTitle}</div>
+          <div class="tip-box">
+            <div class="tip-icon">💡</div>
+            <div>${d.tip}</div>
+          </div>
+          <div class="route-bar">
+            <div class="rdot" style="background:${d.color}"></div>
+            <div class="rline"></div>
+            <span style="font-size:11px;color:var(--muted)">${d.km}</span>
+            <div class="rline"></div>
+            <div class="rdot" style="background:${d.color};opacity:.35"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleDay(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+renderDestGrid();
+renderFilterBar();
+renderDays();
+</script>
+</body>
+</html>
